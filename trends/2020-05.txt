@@ -1,0 +1,19 @@
+テキストエディタ界隈まとめ 5 月
+
+
+* うちのオカンがね、好きなエディタがあるらしいんやけど
+https://blog.runteq.jp/runteqnews/2672/
+
+なるほど。
+
+
+* Slack ワークスペースのアイコンができました
+https://vim-jp.org/blog/2020/05/15/slack-logo.html
+
+vim-jp のアイコンがかなり格好よいものになっていますね。
+
+
+* すべてのエディタでSQLの自動補完をするためにSQL Language Server(sqls)を作った
+https://qiita.com/lighttiger2505/items/5782debc59ae163a4d81
+
+SQL Language server を作成したようです。すごい。

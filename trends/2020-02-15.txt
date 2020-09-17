@@ -1,0 +1,45 @@
+テキストエディタ界隈まとめ 2 月 3 週
+
+そろそろ月間にしようかなぁ……。三月からは検討。
+
+
+* ViVi がオープンソースになる
+https://forest.watch.impress.co.jp/docs/serial/yajiuma/1235666.html
+
+個人的にはかなり衝撃のニュースですね。最近は ViVi の開発が止まっていたのも知り
+ませんでした。
+
+
+* luajob
+https://github.com/TravonteD/luajob
+
+neovim Lua から job API を実行するためのラッパープラグインです。
+Lua でプラグインを書くなら便利かな？
+
+
+* VSCode の Remote – SSH 機能を使って EC2 上で開発する
+http://blog.serverworks.co.jp/tech/2020/02/20/vscode-remote-ssh/
+
+VSCode の Remote 編集機能についての紹介。
+個人的には必要なくなったのだけれど、そんなにも便利なのだろうか？
+
+
+* aniseed
+https://github.com/Olical/aniseed
+
+Lisp で書かれたスクリプトを Lua に変換してプラグイン化する。
+そこまでする情熱がすごい。init.vim を Lua で書くこともできるとか。
+
+
+* nvim_tree.lua
+https://github.com/kyazdani42/nvim-tree.lua
+
+Lua で書かれたファイルツリープラグイン。インストールすると勝手にツリーが出るら
+しい。なるほど。
+
+
+* Boostnote
+https://boostnote.io/
+
+グラフィカルな Markdown エディタ。使いやすいと評判。個人的に Markdown は Vim で
+編集している。

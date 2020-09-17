@@ -1,0 +1,110 @@
+テキストエディタ界隈まとめ 3 月
+
+月間になりました。
+
+
+* 書評： Visual Studio Code 実践ガイドAdd Star
+https://mattn.kaoriya.net/software/vscode/20200224235945.htm
+
+Visual Studio Code の解説書の書評です。Visual Studio Code のことも勉強しないと
+いけませんね。
+
+
+* セッション管理プラグインを作った結果あまりうまく運用できてない
+http://tyru.hatenablog.com/entry/2020/02/25/155513
+
+tyru 氏がセッション管理プラグインを作成したようです。
+個人的にはセッション管理プラグインは使用していません。
+
+
+* cloudmacs
+https://github.com/karlicoss/cloudmacs
+
+Web ブラウザから使える Emacs です。これで非常時にも安心？？
+
+
+* From init.vim to init.lua
+https://teukka.tech/luanvim.html
+
+neovim の設定ファイルを Vim script から Lua へ移行する話。ついに来たかーという
+感じです。
+
+
+* Using LibUV in Neovim
+https://teukka.tech/vimloop.html
+
+libuv を用いて Lua のコードを並列化する方法についての解説。
+
+
+* test_plugins_from_neovim.md
+https://github.com/KillTheMule/KillTheMule.github.io/blob/master/test_plugins_from_neovim.md
+
+neovim のテストフレームワークを用いて Lua のプラグインをデバッグする話。
+これから Lua でプラグインを書く人には参考になりそうな情報です。
+
+
+* MacVim が Vim 8.2 ベースになる
+https://github.com/macvim-dev/macvim/releases/tag/snapshot-162
+
+前回のアップデートが約半年前…。アップデートが遅すぎますね。
+やはり Vim は自前でビルドしましょう。
+
+
+* nnn ファイルマネージャ
+https://github.com/jarun/nnn
+
+CUI ファイルマネージャ。Vim キーバインドに対応し動作も軽いらしい。
+
+
+* medit
+https://github.com/zdcthomas/medit
+
+マクロを編集するプラグイン。マクロをよく使う人ならよいかも。
+
+
+* Vim Vixenの2年間を振り返る
+https://i-beam.org/2019/10/11/vim-vixen-two-years/
+
+Vim Vixen にはいつもお世話になっています。
+
+
+* vim-snipp-snapp-snut-and-the-legend-continues
+https://github.com/axelf4/vim-snipp-snapp-snut-and-the-legend-continues
+
+名前が長すぎるスニペットプラグイン。SnippSnapp が略称みたいです。
+実装がなかなか興味深くて、Vim8 のテキストプロパティ機能を用いています。
+私も deoppet プラグインの開発を頑張らなくてはという気分にさせてくれました。
+
+
+* completion-nvim
+https://github.com/haorenW1025/completion-nvim
+
+neovim の LSP 機能を用いた補完プラグイン。
+LSP の補完に特化しているようだ。Lua で記述されている。
+
+
+* LightningFileExplorer
+https://github.com/zoxves/LightningFileExplorer
+
+Lua で書かれた neovim 用ファイルエクスプローラー。
+似たようなプラグインが他にもあったような気がします。
+
+
+* asyncomplete-nextword.vim
+https://github.com/high-moctane/asyncomplete-nextword.vim
+
+nextword という次にくる単語を出すコマンドを用いて自動補完を行います。
+非常に興味深いです。
+
+
+* マスタリング Vim
+https://www.amazon.co.jp/gp/product/4297111691
+
+Amazon で四月発売される久しぶりの Vim 書籍です。よい本ですが、私は既に原著を
+持っており……。中身はスクリーンショットが多めです。
+
+
+* プログラミルクボーイ「Vim」
+https://www.youtube.com/watch?v=P7LNU9HYr7M
+
+できがよいです。
