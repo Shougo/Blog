@@ -3,7 +3,7 @@ title: "スニペットプラグインについて 2020 年版"
 emoji: "✨"
 type: "tech"
 topics: ["vim", "neovim", "プラグイン", "スニペット"]
-published: false
+published: true
 ---
 
 ## はじめに
