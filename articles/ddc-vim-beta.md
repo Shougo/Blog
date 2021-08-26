@@ -3,7 +3,7 @@ title: "新世代の自動補完プラグイン ddc.vim"
 emoji: "🖤"
 type: "tech"
 topics: ["vim", "neovim", "denops"]
-published: false
+published: true
 ---
 
 ## 始めに
