@@ -13,6 +13,8 @@ published: true
 ユーザーからの要望やバグ報告に対応が終わってから正式版の1.0となりますのでよろし
 くお願いします。
 
+https://github.com/Shougo/ddc.vim
+
 
 ## ddc.vim の特徴
 
