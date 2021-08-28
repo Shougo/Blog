@@ -13,6 +13,91 @@ published: true
 
 https://github.com/Shougo/ddc.vim
 
+私が以前に作成した自動補完プラグインであるdeoplete.nvimは既に開発を終了しました。
+私自身は既にdeoplete.nvimからddc.vimに移行しており、もはや何の不便も感じていません。動作も最初から安定していますし、自信をもってユーザーに使用を推奨することができます。
+
+
+## 自動補完フレームワーク開発の歴史
+
+私はこれまで数々の自動補完フレームワークを開発してきました。ここでその歴史を簡単に振り返ってみましょう。
+
+
+## neocomplcache.vim 2008/12 頃開発
+
+https://github.com/Shougo/neocomplcache.vim
+
+私が始めて作成した自動補完フレームワークは neocomplcache.vim です。
+当時は Vim 7.0 となりスクリプト機能が強化され、Vim 界隈でようやくプラグインが本格的に作られはじめていた黎明期です。
+
+私はEmacsのauto-complete.elに感銘を受け、それをVimで実装しようと考え本格的にプラグイン開発に目覚めていくことになります。
+
+https://www.emacswiki.org/emacs/auto-complete.el
+
+当時Vimには自動補完という概念が少しずつ登場はしてきていましたが、それらはVimの組込み補完を自動的に呼び出すものでしかなく、本格的フレームワークは登場していませんでした。
+neocomplcache.vimは自動補完フレームワークとして国内を中心に爆発的な人気となり、自動補完プラグインの代名詞となりました。
+
+neocomplcache.vimは最初から拡張性を考えられて設計されており、10 年以上前とは思えない先進的な設計とインタフェースを兼ね備えています。
+その代償として内部実装は複雑化しており、オリジナル開発者の私でもメンテナンスは困難となってしまいました。
+後継となるneocomplete.vimはif_lua環境でないと動作しなくなったので、neocomplete.nvimが登場してもしばらくはneocomplcache.vimを愛用する人がいました。
+
+neocomplcache.vimは2013年に開発完了しています。
+
+
+## neocomplete.vim 2013/06 頃開発
+
+https://github.com/Shougo/neocomplete.vim
+
+neocomplcache.vimは内部構造が複雑化してしまっていたのと、実装にVim scriptを用いていることによりパフォーマンスの問題が存在していました。
+neocomplete.vimでは内部構造を整理、if_luaを用いることで高速化を図りました。
+
+if_luaを用いた高速化はもちろん効果があったのですが、if_luaを用いた実装の難しさ、if_luaを用いていかに高速化を行っても補完処理が動いている最中にVimが止まるという問題点を抱えていました。
+結局、その問題点を改善するためにはdeoplete.nvimを待つことになります。
+
+neocomplete.vimは2016年に開発完了しています。
+
+Vim 8.2.1066でif_luaに破壊的変更が加わったことでneocomplete.vimは本格的にメンテナンス不能となりました。現在使用は推奨されません。
+
+https://github.com/vim/vim/commit/bd84617d1a6766efd59c94aabebb044bef805b99
+
+
+## deoplete.nvim 2015/06 頃開発
+
+https://github.com/Shougo/deoplete.nvim
+
+deoplete.nvimはneovimのリモートプラグイン機構を用いることでneocomplete.vimの欠点を解消することを目指して開発されました。
+実装にはPythonを用いることでVim scriptよりパフォーマンスの向上を達成し、補完中にもVimが固まることを防ぎます。
+PythonのほうがVim scriptより簡潔な表現が可能であるため、deoplete.nvimではメンテナンス性の向上を果たしてもいます。
+
+deoplete.nvimは実装にPythonを用いているので読み書きできる人がVim scriptより圧倒的に多いのが利点です。
+開発に貢献してくれる人もneocomplcache,neocompleteと比較して大幅に増えました。
+
+deoplete.nvimはneocomplete.vimより明らかにプルリクエストが多いです。
+
+https://github.com/Shougo/neocomplete.vim/pulls
+
+https://github.com/Shougo/deoplete.nvim/pulls
+
+deoplete.nvimは当初neovim専用のプラグインでしたが、後にvim-hug-neovim-rpcとnvim-yarpを用いることでVim8への対応を実現します。
+それでもdeoplete.nvimはneovimでの用途を優先して開発したプラグインであり、Vim8との互換性には大きな制限がありました。
+
+https://github.com/roxma/vim-hug-neovim-rpc
+https://github.com/roxma/nvim-yarp
+
+deoplete.nvimは2021年に開発完了しています。
+
+
+## ddc.vim 2021/06 頃開発
+
+https://github.com/Shougo/ddc.vim
+
+deoplete.nvimの開発から長い年月が経過したことで、自動補完関連のトレンドも大きく変化しています。
+昔は過渡的な技術であったLSP による補完は一般的なものとなり、neovimはリモートプラグインのサポートからLuaに大きく軸足を移しています。
+Vimとneovimの仕様の乖離は年を重ねる毎に大きくなっており、Vim/neovim両対応のプラグイン開発は困難になりつつありました。
+
+ddc.vimは実装にDenops.vimを用いることによりdeoplete.nvimの欠点を解消するべく開発が開始されました。
+
+ddc.vim は現在絶賛開発中です。
+
 
 ## ddc.vim の特徴
 
@@ -105,6 +190,20 @@ ddc.vimでは標準のsource, filterを用意せず、すべて分離してい�
 これに伴い、ddc.vimでは本体だけでは何も動かなくなっています。source, filterを適切にインストールし設定をしなければいけませんが特に難しいことはないはずで
 す。
 中にはすべてのsourceを同梱する思想の補完プラグインもあります。YouCompleteMeがその代表です。この方式には利点があって、中央集権的に管理できてsourceの仕様変更にもすぐに対応が可能です。
+
+
+## ddc.vim の速度について
+
+ddc.vimは以下のような環境ではdeoplete.nvimより高速に動作します。
+
+* ddc-nextwordのような外部コマンドを使うsourceを利用している
+
+* Windows環境やVim8環境である
+
+* マシンの性能が低い、ssh 先の Vim/neovim、仮想環境である
+
+deoplete.nvimは十分に最適化しているせいもあり、deoplete.nvimを遅いと思わないような環境だとddc.vimに移行しても高速化の恩恵は受けづらいかと思います。
+その場合でもCPUの負荷が減ったり、マシンの処理が重くなりにくいという面での恩恵は受けることができます。
 
 
 ## 廃止した機能について
