@@ -3,7 +3,7 @@ title: "自動補完プラグイン ddc.vim + pum.vim"
 emoji: "🪄"
 type: "tech"
 topics: ["vim", "neovim", "denops"]
-published: false
+published: true
 ---
 
 ## 始めに
