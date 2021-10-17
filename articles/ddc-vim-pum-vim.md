@@ -185,7 +185,7 @@ function! CommandlinePre() abort
   call ddc#custom#patch_buffer('sources',
           \ ['cmdline', 'cmdline-history', 'around'])
 
-  autocmd CmdlineLeave * ++once call CommandlinePost()
+  autocmd User DDCCmdlineLeave ++once call CommandlinePost()
 
   " Enable command line completion
   call ddc#enable_cmdline_completion()
