@@ -92,6 +92,10 @@ https://github.com/Shougo/neco-vim
 
 https://github.com/Shougo/ddc-cmdline-history
 
+Note: `nvim-cmp` もコマンドライン補完対応機能を開発中です。
+
+https://github.com/hrsh7th/nvim-cmp/pull/362
+
 
 ### 端末補完(実験的機能)
 
