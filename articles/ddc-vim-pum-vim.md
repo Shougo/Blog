@@ -69,6 +69,8 @@ https://github.com/auto-complete/popup-el
 
 https://github.com/tani/ddc-fuzzy
 
+![ddc highlight](images/ddc-highlight.png)
+
 
 ### コマンドライン補完
 
@@ -82,7 +84,7 @@ https://github.com/gelguy/wilder.nvim
 
 `pum.vim` はコマンドラインでの補完に対応しており、以下のように `ddc.vim` での補完をコマンドラインで行うことが可能です。
 
-https://user-images.githubusercontent.com/41495/135990228-a0c95c07-7a50-4294-8897-a1a59662b3b5.png
+![command line completion](https://user-images.githubusercontent.com/41495/135990228-a0c95c07-7a50-4294-8897-a1a59662b3b5.png)
 
 応用例としては、`neco-vim` を用いてコマンド引数を補完する、`ddc-cmdline-history` を用いてコマンドラインヒストリから補完する、バッファーの内容から補完するといったことがあります。
 
@@ -95,7 +97,8 @@ https://github.com/Shougo/ddc-cmdline-history
 
 `pum.vim` は挿入モードやコマンドラインだけでなく、端末モードからでさえ補完を行うことが可能です。夢が広がるのではないでしょうか。
 
-https://user-images.githubusercontent.com/41495/136798285-cd809598-a1d1-42f4-92ff-c4cac0eb372c.png
+![terminal completion](https://user-images.githubusercontent.com/41495/136798285-cd809598-a1d1-42f4-92ff-c4cac0eb372c.png)
+
 
 手元だと一応動作はしていますが、Vim/neovim の terminal API の制限により挙動は安定していません。あくまで実験的機能となります。
 
