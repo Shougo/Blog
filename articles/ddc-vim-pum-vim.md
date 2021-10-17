@@ -69,7 +69,7 @@ https://github.com/auto-complete/popup-el
 
 https://github.com/tani/ddc-fuzzy
 
-![ddc highlight](images/ddc-highlight.png)
+![ddc highlight](/images/ddc-highlight.png)
 
 
 ### コマンドライン補完
