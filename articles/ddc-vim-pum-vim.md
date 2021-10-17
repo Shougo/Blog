@@ -158,13 +158,6 @@ inoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 ```
 
 コマンドライン補完を有効化するには、以下のように設定する必要があります。`:` を入力したときに `ddc.vim` の設定を切り替えるようにします。
-`ddc#enable_cmdline_completion()` はコマンドライン補完を有効化する設定で、コマンドライン補完を使用するには必ず呼び出す必要があります。これはコマンドライン補完の設定をコマンドライン外で常に有効化するとパフォーマンスに影響があるためです。
-
-以下の source はコマンドライン補完で使うのに便利です。
-
-https://github.com/Shougo/ddc-cmdline
-https://github.com/Shougo/ddc-cmdline-history
-https://github.com/Shougo/ddc-around
 
 ```vim
 call ddc#custom#patch_global('autoCompleteEvents', [
@@ -200,6 +193,14 @@ function! CommandlinePost() abort
   cunmap <Tab>
 endfunction
 ```
+
+`ddc#enable_cmdline_completion()` はコマンドライン補完を有効化する設定で、コマンドライン補完を使用するには必ず呼び出す必要があります。これはコマンドライン補完の設定をコマンドライン外で常に有効化するとパフォーマンスに影響があるためです。
+
+以下の source はコマンドライン補完で使うのに便利です。
+
+https://github.com/Shougo/ddc-cmdline
+https://github.com/Shougo/ddc-cmdline-history
+https://github.com/Shougo/ddc-around
 
 
 ## GitHub sponsors について
