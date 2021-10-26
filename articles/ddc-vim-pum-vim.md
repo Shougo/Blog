@@ -113,7 +113,7 @@ https://github.com/hrsh7th/nvim-cmp/pull/362
 
 Note: 実装の都合上 neovim 環境のみ対応しています。
 
-![horizontal completion](https://github.com/Shougo/ddc.vim/issues/32#issuecomment-951837088)
+![horizontal completion](https://user-images.githubusercontent.com/41495/138867894-2823d1a5-10f8-4b05-96bc-bd929c29b552.png)
 
 
 ## pum.vim による自作補完ウインドウ機能のデメリット
