@@ -107,6 +107,15 @@ https://github.com/hrsh7th/nvim-cmp/pull/362
 手元だと一応動作はしていますが、Vim/neovim の terminal API の制限により挙動は安定していません。あくまで実験的機能となります。
 
 
+### horizontal menu(実験的機能)
+
+デフォルトの補完メニューは縦方向に補完が出ますが、これでは気が散るという方のために水平方向のメニューを出すことができるようになりました。
+
+Note: 実装の都合上 neovim 環境のみ対応しています。
+
+![horizontal completion](https://github.com/Shougo/ddc.vim/issues/32#issuecomment-951837088)
+
+
 ## pum.vim による自作補完ウインドウ機能のデメリット
 
 `pum.vim` による自作補完ウインドウも万能ではありません。以下のようなデメリットがあります。
