@@ -111,7 +111,7 @@ https://github.com/hrsh7th/nvim-cmp/pull/362
 
 デフォルトの補完メニューは縦方向に補完が出ますが、これでは気が散るという方のために水平方向のメニューを出すことができるようになりました。
 
-Note: 実装の都合上 neovim 環境のみ対応しています。
+最初は neovim 専用機能でしたが、Vim にも対応しました。
 
 ![horizontal completion](https://user-images.githubusercontent.com/41495/138867894-2823d1a5-10f8-4b05-96bc-bd929c29b552.png)
 
