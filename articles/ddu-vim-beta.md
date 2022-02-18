@@ -10,7 +10,7 @@ published: true
 
 Note: この記事は「新世代の自動補完プラグイン ddc.vim」の続編となります。
 
-`ddc.vim` の開発が一通り終了し、ようやく `ddu.vim` の開発にとりかかることができました。
+`ddc.vim` の開発が一通り終了し、ようやく `ddu.vim` (dark deno-powered ui framework)の開発にとりかかることができました。
 ここにきて一通りの機能がそろいましたので、広くユーザーに使ってもらうフェーズに進めたいと考えています。
 `ddc.vim` のときと同様に、ユーザーからの要望やバグ報告に対応が終わってから正式版の 1.0 をリリースしようと考えています。
 
@@ -74,16 +74,20 @@ Note: ちなみに `unite.vim` の各種 API は `vim-ku` の影響を受けて�
 
 * パフォーマンスが悪い。数万の候補をまともに処理できない
 
+`unite.vim` の保守性の悪さはひどく、作者以外はまともにメンテナンスができない上に作者でさえバグ修正が困難となってしまっています。
+
 `unite.vim` のパフォーマンス問題を軽減させるために一部処理を Lua に対応しましたが焼け石に水、その後 Vim の Lua インタフェースの互換性が壊れる事件により Lua コードは削除されることになります。
 
 `unite.vim` の欠点を解消させるために、今後私は新たなプラグインを開発していくことになるのでした。
+
+Note: 余談ですが、`unite.vim` の名前の由来として UI と統合(unite)という意味があります。最初から UI 作成するためのプラグインであったのです。
 
 
 ## denite.nvim 2016/02 頃開発
 
 https://github.com/Shougo/denite.nvim
 
-`unite.vim` の後継となる `denite.nvim` の開発には `unite.vim` から六年もの歳月がかかりました。
+`unite.vim` の後継となる `denite.nvim` (dark-powered neo unite) の開発には `unite.vim` から六年もの歳月がかかりました。
 なぜここまで時間がかかったかというと、`unite.vim` を拡張したり `vimfiler.vim` を開発していたためです。
 
 `unite.vim` に代わる次のプラグインは必要でしたが、そのためのブレイクスルーはまだありませんでした。
@@ -98,6 +102,7 @@ https://github.com/Shougo/denite.nvim
 ユーザーが自分で使うキーマッピングを決めることこそ正しい姿です。
 
 `denite.nvim` はパフォーマンスの向上、保守のしやすさ、Python の豊富なライブラリを利用できることで `unite.vim` の上位互換としての地位を確立することができました。
+`unite.vim` のときとは異なり `denite.nvim` は比較的ソースコードの見通しがよいので、現在でも普通にメンテナンスできるほど保守がしやすくなっています。
 
 しかし `denite.nvim` も万能ではありません。`denite.nvim` の欠点は以下です。
 
@@ -174,6 +179,22 @@ https://github.com/Shougo/ddc.vim
 Note: ただし Deno がうまく動作しない特殊環境では使いにくい可能性があります。それでも Python よりは環境構築が容易です。
 
 
+## ui, source, filter, kind という概念
+
+`ddu.vim` には ui, source, filter, kind という概念が存在します。`unite.vim`, `denite.nvim` にも同様の概念がありますが、一度ここで整理しましょう。
+
+ui とは `ddu.vim` の view を制御する拡張プラグインのことです。
+
+source とは `ddu.vim` の item を生成する拡張プラグインのことです。`anything.el` では情報源と呼ばれています。`telescope.nvim` では picker となっています。
+
+filter とは matcher, sorter, converter をまとめたもので、 item を絞り込みする、ソートする、加工する機能をもった拡張プラグインのことです。
+
+kind とは item に対して実行するアクションを定義するものです。
+
+例えば、`ddu-source-file_rec` source と `ddu-source-file` source は両者とも file kind の item を生成するので、使用するには file kind のインストールが必要です。
+両者の item に対して行えるアクションは基本的に共通となりますが、source 毎にアクションを定義することが可能です。
+
+
 ## UI プラグインによる拡張
 
 `ddu.vim` 独自の概念として UI プラグインというものがあります。
@@ -221,20 +242,20 @@ Note: その代わり初回起動時にはライブラリをインターネッ�
 
 ## 非同期処理
 
-denite.nvim ではリモートプラグインとマルチプロセス処理により非同期処理を実現していました。
+`denite.nvim` ではリモートプラグインとマルチプロセス処理により非同期処理を実現していました。
 しかし、それでも絞り込み処理など一部の処理が非同期にできずパフォーマンスに問題を抱えていました。
 
-ddu.vim は TypeScript を用いることで簡単に非同期処理が実装でき、ありとあらゆる処理が非同期で実行されるので「一部の処理が非同期にできない」ことはありません。
+`ddu.vim` は TypeScript を用いることで簡単に非同期処理が実装でき、ありとあらゆる処理が非同期で実行されるので「一部の処理が非同期にできない」ことはありません。
 
 
 ## 改善されたパフォーマンス
 
-ddu.vim の起動速度は Deno の起動時間があるので、それを含めて考える必要がありますがワーストケースでも denite.nvim と同等です。
-ddu.vim や denops.vim を遅延起動させる場合には注意が必要です。
-とはいえ、denite.nvim は Python のロードが遅く、unite.vim も大量の Vim script を起動時にロードする必要があり起動が軽快とはいえませんでした。
-ddu.vim は他のプラグインにより Deno が既に起動している状態ならば圧倒的な速度で起動します。
+`ddu.vim` の起動速度は Deno の起動時間があるので、それを含めて考える必要がありますがワーストケースでも `denite.nvim` と同等です。
+`ddu.vim` や `denops.vim` を遅延起動させる場合には注意が必要です。
+とはいえ、`denite.nvim` は初回の Python のロードが遅く、`unite.vim` も大量の Vim script を起動時にロードする必要があり起動が軽快とはいえませんでした。
+`ddu.vim` は他のプラグインにより Deno が既に起動している状態ならば圧倒的な速度で起動します。
 
-ddu.vim は候補の取得速度が高速です。denite.nvim も候補取得は非同期化されておりパフォーマンスもチューニングしているので特別遅いわけではないです。
+`ddu.vim` は候補の取得速度が高速です。`denite.nvim` も候補取得は非同期化されておりパフォーマンスもチューニングしているので特別遅いわけではないです。
 比較結果は以下のようになります。
 
 ```
@@ -243,45 +264,59 @@ denite.nvim file/rec(rg) 17.72 秒  64 万ファイル
 ddu.vim file_rec(ネィティブ) 15.85 秒 98 万ファイル
 ```
 
-ざっくりと比較すると、ddu.vim の候補取得は denite.nvim の 1.5 倍高速です。しかも denite.nvim より安定しているので denite.nvim を使う理由がもはやありません。
+ざっくりと比較すると、`ddu.vim` の候補取得は `denite.nvim` の 1.5 倍高速です。しかも `denite.nvim` より安定しているので `denite.nvim` を使う理由がもはやありません。
 
-Note: ただし、ddu.vim でも候補の取得中に強制終了させるとクラッシュするので注意が必要
+Note: ただし、`ddu.vim` でも候補の取得中に強制終了させるとクラッシュするので注意が必要
 
-ddu.vim は TypeScript を用いることで大幅な高速化に成功しましたが、さすがにネイティブコードと比較するとパフォーマンスでは劣ります。
+`ddu.vim` は TypeScript を用いることで大幅な高速化に成功しましたが、さすがにネイティブコードと比較するとパフォーマンスでは劣ります。
 しかしネイティブコードを用いるとどうしても柔軟性が下がります。クライアントにはビルド環境が必要ですし、プラグインに拡張機能を同梱することも非常にやりづらいでしょう。
-ddu.vim の利点はスクリプト言語の柔軟性がありつつ、パフォーマンスに優れていることにあるかと思います。
+`ddu.vim` の利点はスクリプト言語の柔軟性がありつつ、パフォーマンスに優れていることにあるかと思います。
+
+
+## ui, source, filter, kind の分離
+
+`ddu.vim` では ui, source, filter, kind の全ての機能が分離されており、ユーザーが好きな機能を選択することができます。
+もちろんこれには欠点があり、`ddu.vim` プラグイン本体をインストールするだけだと使い始めることはできません。
+ユーザーは各種プラグインの機能を理解して、必要なものを個別にインストールする必要があるのです。
+
+`ddu.vim` とは異なり、本体にほとんど全てを同梱しているファジーファインダーは多くあります。
+`unite.vim`, `denite.nvim` もそうですし、`fzf-preview` や `telescope.nvim` もそうです。
+ユーザーとしては便利ですが本体が肥大化するのが問題になっており、`telescope.nvim` ではビルトイン機能を分離する話も出てきているほどです。
+とはいえ、後から分離するとユーザーの反発も大きいでしょうし容易ではありません。`ddu.vim` のように最初から分離するべきであったと言えるでしょう。
+
+https://github.com/nvim-telescope/telescope.nvim/issues/1228
+
+機能を分離することにはメンテナンス上の理由があります。
+本体と各種機能が密結合することがなくなり、責任が明確になり issues や Pull requests が汚れることを防いでくれます。
+これは長いメンテナンスを考えるととても重要です。プラグインは一度作って終わりではありません。
 
 
 ## 設定項目や設定方法の整理
 
-ddc.vim, ddu.vim では options, params という独自の概念があります。
+`ddc.vim`, `ddu.vim` では options, params という独自の概念があります。
 
 options とは、それぞれの source, filter, ui, kind に共通した汎用的な設定です。
 
-params とは、source, filter, ui, kind 特有の設定です。
+params とは、個別の source, filter, ui, kind 特有の設定です。
 
+options は本体により既定値が決まっており、拡張プラグインがその値を変更することはできません。
+デフォルト値を上書きできるのはユーザーのみとなります。
+これはユーザーが意図しない挙動をしないようにするための措置です。
+`ddu.vim` では、拡張プラグイン側が何か推奨する設定をユーザーにしてほしいと思った場合、ドキュメントにてサンプルを提示することが推奨されます。
+ユーザーがその指示に従うかどうかは自由です。ユーザーが選択できることこそが価値なのです。
 
-ddu.vim の設定には変数は一切存在せず、すべての設定は以下の custom API を用いて行うことになります。
+params については拡張プラグインが自由に初期値を設定することができ、ユーザーがそれを上書きすることができます。
+params の初期値についてはドキュメントに記述することが推奨されます。
+
+`ddu.vim` の設定には変数は一切存在せず、すべての設定は以下の custom API を用いて行うことになります。
 
 * グローバル設定 (`ddu#custom#patch_global()`)
 * ローカル設定 (`ddu#custom#patch_local()`)
 
-ddu.vim では、何か推奨する設定をユーザーにしてほしいと思った場合、ドキュメントにてサンプルを提示することが推奨されます。
-ユーザーがその指示に従うかどうかは自由です。ユーザーが選択できることこそが価値なのです。
-
-
-## source, filter, ui, kind の分離
-
-ddu.vim 本体は最小限の機能しかなく、多くの機能はプラグインとして用意されています。
-ddu.vim では source, filter, ui, kind の全ての機能が分離されており、ユーザーが好きな機能を選択することができます。
-もちろんこれには欠点があり、プラグインをインストールしてすぐに使い始めることはできません。
-
-特に ui 部分が完全に分離されたのは大きいです。
-
 
 ## コマンドの分離
 
-ddu.vim では denite.nvim とは異なり、コマンドも `ddu-commands.vim` という別プラグインに分離しました。
+`ddu.vim` では `denite.nvim` とは異なり、コマンドも `ddu-commands.vim` という別プラグインに分離しました。
 これはなぜかというと、これらのコマンドはシンタックスシュガーというべきもので誰もが必要なものではないし必要ならばユーザーが自由に作るべきものだと考えているからです。
 
 https://github.com/Shougo/ddu-commands.vim
@@ -289,7 +324,7 @@ https://github.com/Shougo/ddu-commands.vim
 
 # 廃止した機能について
 
-ddu.vim では ddc.vim とは異なり意図的に廃止した機能は少ないです。
+`ddu.vim` では `ddc.vim` とは異なり意図的に廃止した機能は少ないです。
 
 
 ## クイックマッチ機能
@@ -300,7 +335,7 @@ ddu.vim では ddc.vim とは異なり意図的に廃止した機能は少ない
 ## source の is_interactive フラグ
 
 source の `is_interactive` フラグは source の候補取得が入力に依存することを表すものです。
-ddu.vim では入力に応じて候補を refresh する場合、ユーザーが明示的に `volatile` オプションを用いるので不要です。
+`ddu.vim` では入力に応じて候補を refresh する場合、ユーザーが明示的に `volatile` オプションを用いるので不要です。
 
 
 ## source の is_async フラグ
@@ -313,30 +348,75 @@ https://developer.mozilla.org/ja/docs/Web/API/ReadableStream
 
 # 自分では実装しない機能について
 
-自分が必要な機能は ddu.vim に一通り実装していますが、諸事情により自分では実装しない機能について説明します。ユーザーは独自に実装できます。
+自分が必要な機能は `ddu.vim` に一通り実装していますが、諸事情により自分では実装しない機能について説明します。ユーザーは独自に実装できます。
 
 
 ## メニュー機能(:Denite menu)
 
-denite.nvim にはメニュー機能があります。
+`denite.nvim` にはメニュー機能があります。
 自分が使用していないので実装しないことにしました。
-ただし ddu.vim には実行中の source を切り替える機能が存在するので、ユーザーがメニューを独自に実装することが可能です。
+ただし `ddu.vim` には実行中の source を切り替える機能が存在するので、ユーザーがメニューを独自に実装することが可能です。
 
 
 # ddu.vim の使用方法
 
+詳しい使用方法はドキュメントを参照してください、としたいのですが簡単に説明をしておきます。
+
+前述の通り、`ddu.vim` の導入には Deno と `denops.vim` が必須となります。先に導入をしておいてください。
+
+- <https://deno.land/>
+- <https://github.com/vim-denops/denops.vim>
+
+ここではプラグインと依存関係はすでにインストール済み、ロード済みとして話を続けます。
+
+必須の依存関係のほかにも、`ddu.vim` ではデフォルトの ui, source, filter, kind を廃止しているため、それらのインストールが必須となります。
+自分が必要となるものをインストールしましょう。以下のリンクから探すと良いです。
+
+https://github.com/topics/ddu-ui
+https://github.com/topics/ddu-source
+https://github.com/topics/ddu-filter
+https://github.com/topics/ddu-kind
+
+ここでは、比較的一般的なものである `ddu-ui-ff`, `ddu-source-file_rec`, `ddu-filter-matcher_substring`, `ddu-kind-file` を使用するものとします。
+
+https://github.com/Shougo/ddu-ui-ff
+https://github.com/Shougo/ddu-file_rec
+https://github.com/Shougo/ddu-filter-matcher_substring
+https://github.com/Shougo/ddu-kind-file
+
+`ddu.vim` の設定は以下のように行います。
+
+```vim
+call ddu#custom#patch_global({
+    \   'ui': 'ff',
+    \   'sources': [{'name': 'file_rec', 'params': {}}],
+    \   'sourceOptions': {
+    \     '_': {
+    \       'matchers': ['matcher_substring'],
+    \     },
+    \   },
+    \   'kindOptions': {
+    \     'file': {
+    \       'defaultAction': 'open',
+    \     },
+    \   }
+    \ })
+
+call ddu#start({})
+```
+
 
 # これからのプラグイン開発について
 
-ddu.vim の開発は一通り完了し、自分が日常的に使う上で困らなくなりました。ddu.vim の今後は機能追加より機能の安定化に注力し、正式版のリリースを目指します。
-その後は defx.nvim の後継プラグインを ddu.vim の UI プラグインとして開発する予定です。
+`ddu.vim` の開発は一通り完了し、自分が日常的に使う上で困らなくなりました。`ddu.vim` の今後は機能追加より機能の安定化に注力し、正式版のリリースを目指します。
+その後は `defx.nvim` の後継プラグインを `ddu.vim` の UI プラグインとして開発する予定です。
 
 https://github.com/Shougo/ddu-ui-filer
 
 
 # GitHub sponsors について
 
-今回のddc.vimプラグインの開発はGitHub sponsorsの皆さんの支援によって行われました。
+今回の `ddu.vim` プラグインの開発は GitHub sponsors の皆さんの支援によって行われました。
 何年もかけて開発してきたプラグインを作り直すのはとてもエネルギーの必要な作業です。
 皆さんからの支援がなければ、到底実現できなかっただろうと思います。
 
@@ -344,4 +424,4 @@ https://zenn.dev/shougo/articles/github-sponsors
 
 https://github.com/sponsors/Shougo/
 
-GitHub sponsorsでの支援は確実に自分のプラグインの開発意欲の向上に役立っているので、プラグインのユーザーに広く支援をお願いします。
+GitHub sponsors での支援は確実に自分のプラグインの開発意欲の向上に役立っているので、プラグインのユーザーに広く支援をお願いします。
