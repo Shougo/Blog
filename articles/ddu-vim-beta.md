@@ -385,7 +385,7 @@ https://github.com/topics/ddu-kind
 ここでは、比較的一般的なものである `ddu-ui-ff`, `ddu-source-file_rec`, `ddu-filter-matcher_substring`, `ddu-kind-file` を使用するものとします。
 
 https://github.com/Shougo/ddu-ui-ff
-https://github.com/Shougo/ddu-file_rec
+https://github.com/Shougo/ddu-source-file_rec
 https://github.com/Shougo/ddu-filter-matcher_substring
 https://github.com/Shougo/ddu-kind-file
 
