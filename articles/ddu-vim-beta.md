@@ -20,12 +20,6 @@ https://github.com/Shougo/ddu.vim
 私自身は既に `denite.nvim` から `ddu.vim` に移行しています。`ddu.vim` に `denite.nvim` の一部機能はまだ実装されていませんが、自分が使うぶんには十分です。
 
 
-# UI 作成プラグインとは
-
-そもそも、`unite.vim`, `denite.nvim` の時代からファジーファインダーを作りたかったわけではないのです。
-UI 作成フレームワークを作成したかったのです。
-
-
 # ファジーファインダーフレームワーク開発の歴史
 
 私はこれまでいくつかのファジーファインダーを開発してきました。その歴史を振り返ってみることにしましょう。
@@ -74,7 +68,7 @@ Note: ちなみに `unite.vim` の各種 API は `vim-ku` の影響を受けて�
 
 * パフォーマンスが悪い。数万の候補をまともに処理できない
 
-`unite.vim` の保守性の悪さはひどく、作者以外はまともにメンテナンスができない上に作者でさえバグ修正が困難となってしまっています。
+特に `unite.vim` の保守性の悪さはひどく、作者以外はまともにメンテナンスができない上に作者でさえバグ修正が困難となってしまっています。
 
 `unite.vim` のパフォーマンス問題を軽減させるために一部処理を Lua に対応しましたが焼け石に水、その後 Vim の Lua インタフェースの互換性が壊れる事件により Lua コードは削除されることになります。
 
@@ -162,8 +156,7 @@ https://github.com/vim-denops/denops.vim
 
 https://github.com/Shougo/ddc.vim
 
-`ddc.vim` の開発で得られたノウハウを `ddu.vim` では活用し、より実装を洗練させました。
-`ddu.vim` はいままでにはない完成度のプラグインとなったのです。
+`ddc.vim` の開発で得られたノウハウを `ddu.vim` では活用し、より実装を洗練させました。`ddu.vim` はいままでにはない完成度のプラグインとなったのです。
 
 
 # ddu.vim の特徴
@@ -268,9 +261,12 @@ ddu.vim file_rec(ネィティブ) 15.85 秒 98 万ファイル
 
 Note: ただし、`ddu.vim` でも候補の取得中に強制終了させるとクラッシュするので注意が必要
 
-`ddu.vim` は TypeScript を用いることで大幅な高速化に成功しましたが、さすがにネイティブコードと比較するとパフォーマンスでは劣ります。
-しかしネイティブコードを用いるとどうしても柔軟性が下がります。クライアントにはビルド環境が必要ですし、プラグインに拡張機能を同梱することも非常にやりづらいでしょう。
+`ddu.vim` は TypeScript を用いることで大幅な高速化に成功しましたが、さすがにネイティブコードを用いた各種ファジーファインダーと比較するとパフォーマンスではやや劣ります。
+しかしネイティブコードを用いるデメリットとして、どうしても柔軟性が下がります。クライアントにはビルド環境が必要ですし、プラグインに拡張機能を同梱することも非常にやりづらいでしょう。
 `ddu.vim` の利点はスクリプト言語の柔軟性がありつつ、パフォーマンスに優れていることにあるかと思います。
+ネイティブコードを用いるとファジーファインダーの抱える全ての問題が解決というほど甘くはないのです。
+
+Note: 例えば `linearf` プラグインはネイティブコードを用いており動作が `ddu.vim` よりも高速ですが、全ての拡張プラグインを一度ロードして一つにしてビルドしなければいけません。遅延起動したプラグインとは壊滅的に相性が悪いです。
 
 
 ## ui, source, filter, kind の分離
@@ -293,25 +289,27 @@ https://github.com/nvim-telescope/telescope.nvim/issues/1228
 
 ## 設定項目や設定方法の整理
 
-`ddc.vim`, `ddu.vim` では options, params という独自の概念があります。
+`ddu.vim` の設定には変数は一切存在せず、すべての設定は以下の custom API を用いて行うことになります。
+
+* グローバル設定 (`ddu#custom#patch_global()`)
+* ローカル設定 (`ddu#custom#patch_local()`)
+
+グローバル設定がデフォルトの設定の上書きで、ローカル設定は特定の name が設定された ddu セッション固有の設定となります。
+これは `denite.nvim` でいう `denite#custom#option()` にて buffer_name を指定したときに相当します。
+
+更に `ddc.vim`, `ddu.vim` では options, params という独自の概念があります。
 
 options とは、それぞれの source, filter, ui, kind に共通した汎用的な設定です。
 
 params とは、個別の source, filter, ui, kind 特有の設定です。
 
 options は本体により既定値が決まっており、拡張プラグインがその値を変更することはできません。
-デフォルト値を上書きできるのはユーザーのみとなります。
-これはユーザーが意図しない挙動をしないようにするための措置です。
+デフォルト値を上書きできるのはユーザーのみとなります。これは拡張プラグインが値を上書きすることで、ユーザーが意図しない挙動をしないようにするための措置です。
 `ddu.vim` では、拡張プラグイン側が何か推奨する設定をユーザーにしてほしいと思った場合、ドキュメントにてサンプルを提示することが推奨されます。
 ユーザーがその指示に従うかどうかは自由です。ユーザーが選択できることこそが価値なのです。
 
 params については拡張プラグインが自由に初期値を設定することができ、ユーザーがそれを上書きすることができます。
 params の初期値についてはドキュメントに記述することが推奨されます。
-
-`ddu.vim` の設定には変数は一切存在せず、すべての設定は以下の custom API を用いて行うことになります。
-
-* グローバル設定 (`ddu#custom#patch_global()`)
-* ローカル設定 (`ddu#custom#patch_local()`)
 
 
 ## コマンドの分離
@@ -404,6 +402,81 @@ call ddu#custom#patch_global({
 
 call ddu#start({})
 ```
+
+`ddu#custom#patch_global()` によりグローバル設定を変更します。
+
+`ui` オプションに `ff` を指定することにより、`ddu-ui-ff` を読み込むという意味になります。
+
+デフォルトでは source は何も指定されていないため、`file_rec` source を利用するために `sources` オプションを設定しています。
+ちなみに、`ui`, `sources` `matchers`, `sorters`, `converters` は名前のチェック機能が存在しており、インストールしていないものを指定するとエラーになります。
+
+`sourceOptions` により source 固有の設定をします。source 名に `_` を与えることでデフォルトの設定を変更します。ここでは入力の絞り込みを行う `matchers` として `matcher_substring` をセットしています。
+
+`ddu.vim` 特有の設定として、kind のデフォルトアクションをユーザーが指定する必要があります。ここでは選択したファイルを開く `open` アクションを指定しています。
+
+`call ddu#start({})` を実行すると、デフォルトの設定で source を起動します。この場合は `file_rec` source が起動して以下のような表示になるはずです。
+
+![ddu.vim](/images/ddu.png)
+
+`ddu-ui-ff` にはデフォルトキーマッピングが存在しないので、`ddu-ui-ff` のウインドウが表示されてもこれだけでは操作ができません。
+以下のようにキーマッピングを設定する必要があります。これは `denite.nvim` の設定に慣れている人ならば理解しやすいでしょう。
+
+```vim
+autocmd FileType ddu-ff call s:ddu_my_settings()
+function! s:ddu_my_settings() abort
+  nnoremap <buffer><silent> <CR>
+        \ <Cmd>call ddu#ui#ff#do_action('itemAction')<CR>
+  nnoremap <buffer><silent> <Space>
+        \ <Cmd>call ddu#ui#ff#do_action('toggleSelectItem')<CR>
+  nnoremap <buffer><silent> i
+        \ <Cmd>call ddu#ui#ff#do_action('openFilterWindow')<CR>
+  nnoremap <buffer><silent> q
+        \ <Cmd>call ddu#ui#ff#do_action('quit')<CR>
+endfunction
+
+autocmd FileType ddu-ff-filter call s:ddu_filter_my_settings()
+function! s:ddu_filter_my_settings() abort
+  inoremap <buffer><silent> <CR>
+  \ <Esc><Cmd>close<CR>
+  nnoremap <buffer><silent> <CR>
+  \ <Cmd>close<CR>
+  nnoremap <buffer><silent> q
+  \ <Cmd>close<CR>
+endfunction
+```
+
+`ddu-ui-ff` は filetype `ddu-ff` のバッファーを生成するので、それを利用してキーマッピングの設定を行います。
+
+`ddu#ui#ff#do_action` は UI 固有のアクションを実行するための機能です。`denite.nvim` でいうと `denite#do_map()` に相当します。
+
+`itemAction` は選択した item またはカーソル上の item の item アクションを実行する機能です。`denite.nvim` でいうと `do_action` に相当します。
+このアクションは引数に item アクション名をとりますが、省略するとデフォルトアクションとなります。
+
+`ddu-ui-ff` において、絞り込みを行うには `openFilterWindow` アクションで filter window を開かなければいけません。
+これは `denite.nvim` と同じ仕様となります。filter window を開くと以下のようになります。
+
+![ddu-filter.vim](/images/ddu-filter.png)
+
+filter window のキーマッピングは `FileType ddu-ff-filter` autocmd で設定します。
+`denite.nvim` とは異なり、`ddu-ui-ff` の filter window にはデフォルトで何もマッピングがされていません。
+
+`ddu.vim` において特に注意しないといけないことは、UI の設定は全て `uiOptions` や `uiParams` に記述するということです。
+ユーザーはそれが何の設定であるか把握しておく必要があります。
+例えば、neovim の floating window 機能で `ddu-ui-ff` のウインドウを表示したい場合以下のように設定をします。
+
+```vim
+call ddu#custom#patch_global({
+    \   'uiParams': {
+    \     'ff': {
+    \       'split': 'floating',
+    \     }
+    \   },
+    \ })
+```
+
+`split` は `ddu-ui-ff` ウインドウの分割設定を変更する `ddu-ui-ff` 固有の設定なので `uiParams` の `ff` をキーに設定しています。
+
+これで最低限の解説は終了です。基本は分かったはずですので、あとはddc.vimを設定していきながら学んでいきましょう。
 
 
 # これからのプラグイン開発について
