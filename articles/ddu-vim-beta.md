@@ -429,8 +429,6 @@ call ddu#custom#patch_global({
     \     },
     \   }
     \ })
-
-call ddu#start({})
 ```
 
 `ddu#custom#patch_global()` によりグローバル設定を変更します。
@@ -444,7 +442,11 @@ call ddu#start({})
 
 `ddu.vim` 特有の設定として、kind のデフォルトアクションをユーザーが指定する必要があります。ここでは選択したファイルを開く `open` アクションを指定しています。
 
-`call ddu#start({})` を実行すると、デフォルトの設定で source を起動します。この場合は `file_rec` source が起動して以下のような表示になるはずです。
+プラグインの初期化が終わったら `call ddu#start({})` を実行すると、デフォルトの設定で source を起動します。この場合は `file_rec` source が起動して以下のような表示になるはずです。
+
+::: message
+`call ddu#start({})` は絶対に Vim/neovim の初期化時に実行しないでください。`denops.vim` の初期化が終わっていないのでエラーになります。
+:::
 
 ![ddu.vim](/images/ddu.png)
 
