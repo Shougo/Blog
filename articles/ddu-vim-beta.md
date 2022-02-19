@@ -27,13 +27,15 @@ https://github.com/Shougo/ddu.vim
 
 ## unite.vim 2010/07 頃開発
 
+私が一番最初に開発したファジーファインダーは `unite.vim` でした。
+
 https://github.com/Shougo/unite.vim
 
-そもそも `unite.vim` を開発するきっかけは、私が `anything.el` (2008 年頃登場) に憧れており Vim でも似たようなことをしようと思っていたためです。
+そもそも `unite.vim` を開発するきっかけは、私が Emacs の `anything.el` (2008 年頃登場) に憧れており Vim でも似たようなことをしようと思っていたためです。
 
 https://github.com/emacs-jp/anything
 
-`anything.el` というフレームワークを利用することで、あらゆる操作を統一したインタフェースで行うというのは私の理想形でした。
+`anything.el` というフレームワークを利用することで、あらゆる操作を統一したインタフェースで行うという思想は私の理想形でした。
 
 当時は Vim プラグインのファジーファインダーとして `FuzzyFinder`(vim-fuzzyfinder 2007 年登場) や `vim-ku`(2008 年登場) というものがあり私はそれらを使っていました。
 
@@ -49,7 +51,7 @@ https://github.com/kana/vim-ku
 
 * 機能が少ない
 
-Note: ちなみに `unite.vim` の各種 API は `vim-ku` の影響を受けています。kind という概念や custom API、define で source を定義する部分などです。vim-ku の提唱した UI フレームワークという基本的な概念を自分が再実装したのが unite.vim と考えることができます。
+Note: ちなみに `unite.vim` の各種 API は `vim-ku` の影響を受けています。kind という概念や custom API、define で source を定義する部分などです。vim-ku の提唱した UI フレームワークという基本的な概念を自分が再実装し、拡張したのが unite.vim と考えることができます。
 
 `unite.vim` の特徴は以下の通りです。
 
@@ -59,8 +61,7 @@ Note: ちなみに `unite.vim` の各種 API は `vim-ku` の影響を受けて�
 
 * normal mode, insert mode 両方に対応
 
-`unite.vim` は拡張に拡張を重ねた結果 2010 年当時に開発されたプラグインとしては完成度が高く、2022 年になっても機能的には見劣りがしません。
-未だに `unite.vim` を使用している人がいるほどです。
+`unite.vim` は拡張に拡張を重ねた結果 2010 年当時に開発されたプラグインとしては完成度が高く、2022 年になっても機能的には見劣りがしません。未だに `unite.vim` を使用している人がいるほどです。
 
 しかし `unite.vim` も万能というわけではなく、以下のような欠点がありました。
 
@@ -70,7 +71,7 @@ Note: ちなみに `unite.vim` の各種 API は `vim-ku` の影響を受けて�
 
 特に `unite.vim` の保守性の悪さはひどく、作者以外はまともにメンテナンスができない上に作者でさえバグ修正が困難となってしまっています。
 
-`unite.vim` のパフォーマンス問題を軽減させるために一部処理を Lua に対応しましたが焼け石に水、その後 Vim の Lua インタフェースの互換性が壊れる事件により Lua コードは削除されることになります。
+`unite.vim` のパフォーマンス問題を軽減させるために、`unite.vim` の一部処理を Lua に対応を行いましたが焼け石に水でした。その後 Vim の Lua インタフェースの互換性が壊れる事件により Lua コードは削除されることになります。
 
 `unite.vim` の欠点を解消させるために、今後私は新たなプラグインを開発していくことになるのでした。
 
@@ -82,9 +83,12 @@ Note: 余談ですが、`unite.vim` の名前の由来として UI と統合(uni
 https://github.com/Shougo/denite.nvim
 
 `unite.vim` の後継となる `denite.nvim` (dark-powered neo unite) の開発には `unite.vim` から六年もの歳月がかかりました。
-なぜここまで時間がかかったかというと、`unite.vim` を拡張したり `vimfiler.vim` を開発していたためです。
+なぜここまで時間がかかったかというと、そのころの私は `unite.vim` を拡張したり `unite.vim` を用いたファイル操作プラグイン `vimfiler.vim` を開発していたためです。
 
 `unite.vim` に代わる次のプラグインは必要でしたが、そのためのブレイクスルーはまだありませんでした。
+
+2014 年に neovim が登場し、neovim がリモートプラグインという新たなプラグインアーキテクチャを提唱しました。
+保守性とパフォーマンスの悪い Vim のプラグイン機構に不満を持っていた私は、リモートプラグイン機構を用いて Python で `denite.nvim` を実装することになりました。
 
 当初 `denite.nvim` はユーザーの入力を乗っ取ることで独自のイベントループを実装していました。
 これには他のプラグインや設定とコンフリクトしにくい利点があったのですが、同時にユーザーが自由に設定や移動ができなかったりする欠点も抱えていました。
@@ -106,11 +110,11 @@ https://github.com/Shougo/denite.nvim
 
 * 絞り込み処理が非同期化できておらず、処理のボトルネックになっている
 
-* neovim はリモートプラグイン API のメンテナンスではなく、 Lua API を優先しており将来がない
+* neovim はリモートプラグイン API のメンテナンスではなく、 Lua API の整備を優先しており将来がない
 
 * Vim8 との互換性が低い、Vim8 環境でのパフォーマンスが悪い
 
-`denite.nvim` 開発後期になると、リモートプラグインに代わり Lua で書かれた neovim プラグインがプラグイン界隈を圧巻しはじめます。
+`denite.nvim` 開発後期になると、リモートプラグインに代わり Lua で書かれた neovim 用プラグインがプラグイン界隈を圧巻しはじめます。
 それはファジーファインダー界隈でも例外ではありませんでした。
 
 `telescope.nvim` は neovim 利用者に圧倒的速度で広まり、現在ではデファクトスタンダードの地位を確立しています。
@@ -121,7 +125,7 @@ https://github.com/nvim-telescope/telescope.nvim
 
 * neovim でしか動作しない
 
-* Lua は立場として高速な Vim script であり処理が固まる問題を解決ができない。Vim9 script も同様の問題を抱える
+* Lua は立場として高速な Vim script であり、処理が固まる問題を解決ができない。Vim9 script も同様の問題を抱える
 
 * ライブラリが貧弱である
 
@@ -134,7 +138,7 @@ https://github.com/nvim-telescope/telescope.nvim
 
 https://github.com/Shougo/ddu.vim
 
-`denite.nvim` の後継プラグインを開発するうえで、次のブレイクスルーとなったのは `denops.vim` です。
+`denite.nvim` の後継プラグインを開発するうえで、次のブレイクスルーとなったのは 2021 年に満を持して登場した `denops.vim` です。
 
 https://github.com/vim-denops/denops.vim
 
@@ -152,7 +156,7 @@ https://github.com/vim-denops/denops.vim
 
 `denops.vim` は私の求めていた要件をほとんど満たしていました。
 
-`denops.vim` を用いて作成した自動補完プラグイン `ddc.vim` が成功し、ようやく本命である `ddu.vim` の開発が開始されることになったのです。
+`denops.vim` を用いて私が作成した自動補完プラグイン `ddc.vim` が成功し、ようやく本命である `ddu.vim` の開発が開始されることになったのです。
 
 https://github.com/Shougo/ddc.vim
 
@@ -180,7 +184,7 @@ ui とは `ddu.vim` の view を制御する拡張プラグインのことです
 
 source とは `ddu.vim` の item を生成する拡張プラグインのことです。`anything.el` では情報源と呼ばれています。`telescope.nvim` では picker となっています。
 
-filter とは matcher, sorter, converter をまとめたもので、 item を絞り込みする、ソートする、加工する機能をもった拡張プラグインのことです。
+filter とは matcher, sorter, converter をまとめた概念で、 item を絞り込みする、ソートする、加工する機能をもった拡張プラグインのことです。
 
 kind とは item に対して実行するアクションを定義するものです。
 
@@ -211,15 +215,15 @@ https://github.com/Shougo/ddu-ui-filer
 これは UI の好みが人それぞれだからだと思います。
 
 `denite.nvim` はオプションで UI をカスタム可能にすることで問題に一部対処していますが、根本的な解決とはなりませんでした。
-ファジーファインダーが乱立すると何が問題なのでしょうか。それは設定や派生プラグインに互換性がなくなるからです。
-UI が違うファジーファインダーに対して、毎回車輪の再発明がなされることになります。
+ファジーファインダーが乱立すると何が問題なのでしょうか。それは設定や派生プラグインに互換性がなくことです。
+UI が違うファジーファインダーに対して、毎回車輪の再発明がなされることになります。これは無駄ではないでしょうか。
 
 例えば `fzf-preview` は fzf を無理矢理拡張して独自の UI を実現しています。
 
 https://github.com/yuki-ycino/fzf-preview.vim
 
 `ddu.vim` だとこの問題は解決しています。
-`ddu-ui-ff` は `denite.nvim` ライクで標準的なファジーファインダーの UI ですが、UI が気に入らなければ自分で好きな UI をフルスクラッチすればよいのです。
+私が作成した `ddu-ui-ff` は `denite.nvim` ライクで標準的なファジーファインダーの UI ですが、UI が気に入らなければ自分で好きな UI をフルスクラッチすればよいのです。
 `ddu-ui-filer` では `ddu.vim` をベースにしたファイル操作のプラグインを実装する予定です。これも `ddu.vim` の大きな可能性といえます。
 
 
@@ -244,12 +248,12 @@ Note: その代わり初回起動時にはライブラリをインターネッ�
 ## 改善されたパフォーマンス
 
 `ddu.vim` の起動速度は Deno の起動時間があるので、それを含めて考える必要がありますがワーストケースでも `denite.nvim` と同等です。
-`ddu.vim` や `denops.vim` を遅延起動させる場合には注意が必要です。
+`ddu.vim` や `denops.vim` を遅延起動させる場合には初回起動時間に注意が必要です。
 とはいえ、`denite.nvim` は初回の Python のロードが遅く、`unite.vim` も大量の Vim script を起動時にロードする必要があり起動が軽快とはいえませんでした。
 `ddu.vim` は他のプラグインにより Deno が既に起動している状態ならば圧倒的な速度で起動します。
 
-`ddu.vim` は候補の取得速度が高速です。`denite.nvim` も候補取得は非同期化されておりパフォーマンスもチューニングしているので特別遅いわけではないです。
-比較結果は以下のようになります。
+`ddu.vim` は `denite.nvim` よりも候補の取得速度が高速です。しかし `denite.nvim` も候補取得は非同期化されておりパフォーマンスもチューニングしているので特別遅いわけではないです。
+両者の比較結果は以下のようになります。
 
 ```
 denite.nvim file/rec(scantree.py) 10.86 秒  40 万ファイル
@@ -266,7 +270,10 @@ Note: ただし、`ddu.vim` でも候補の取得中に強制終了させると�
 `ddu.vim` の利点はスクリプト言語の柔軟性がありつつ、パフォーマンスに優れていることにあるかと思います。
 ネイティブコードを用いるとファジーファインダーの抱える全ての問題が解決というほど甘くはないのです。
 
-Note: 例えば `linearf` プラグインはネイティブコードを用いており動作が `ddu.vim` よりも高速ですが、全ての拡張プラグインを一度ロードして一つにしてビルドしなければいけません。遅延起動したプラグインとは壊滅的に相性が悪いです。
+Note: 例えば `linearf` プラグインはネイティブコードを用いており動作が `ddu.vim` よりも高速ですが、更新の度に全ての拡張プラグインを一度ロードして一つにしてビルドしなければいけません。遅延起動したプラグインとは壊滅的に相性が悪いです。
+`ddu.vim` では拡張プラグインを必要なときのみ動的にロードするので遅延起動も問題なく対応できます。
+
+https://github.com/octaltree/linearf
 
 
 ## ui, source, filter, kind の分離
@@ -276,8 +283,8 @@ Note: 例えば `linearf` プラグインはネイティブコードを用いて
 ユーザーは各種プラグインの機能を理解して、必要なものを個別にインストールする必要があるのです。
 
 `ddu.vim` とは異なり、本体にほとんど全てを同梱しているファジーファインダーは多くあります。
-`unite.vim`, `denite.nvim` もそうですし、`fzf-preview` や `telescope.nvim` もそうです。
-ユーザーとしては便利ですが本体が肥大化するのが問題になっており、`telescope.nvim` ではビルトイン機能を分離する話も出てきているほどです。
+そもそも私が開発した `unite.vim`, `denite.nvim` がそうですし、`fzf-preview` や `telescope.nvim` もそうです。
+インストールするプラグインが少なくて済むのでユーザーとしては便利ですが、本体が肥大化するのが問題になっています。`telescope.nvim` ではビルトイン機能を分離する話も出てきているほどです。
 とはいえ、後から分離するとユーザーの反発も大きいでしょうし容易ではありません。`ddu.vim` のように最初から分離するべきであったと言えるでしょう。
 
 https://github.com/nvim-telescope/telescope.nvim/issues/1228
@@ -315,7 +322,7 @@ params の初期値についてはドキュメントに記述することが推�
 ## コマンドの分離
 
 `ddu.vim` では `denite.nvim` とは異なり、コマンドも `ddu-commands.vim` という別プラグインに分離しました。
-これはなぜかというと、これらのコマンドはシンタックスシュガーというべきもので誰もが必要なものではないし必要ならばユーザーが自由に作るべきものだと考えているからです。
+これはなぜかというと、コマンドはシンタックスシュガーというべきもので誰もが必要なものではないし、必要ならばユーザーが自由に作るべきものだと考えているからです。
 
 https://github.com/Shougo/ddu-commands.vim
 
@@ -339,7 +346,7 @@ source の `is_interactive` フラグは source の候補取得が入力に依�
 ## source の is_async フラグ
 
 source の `is_async` フラグは source の候補取得が非同期であるかを表すものです。
-ddu.vim では `ReadableStream` を用いて候補を更新するので不要となりました。
+ddu.vim では `ReadableStream` を用いて非同期に候補を更新するので不要となりました。
 
 https://developer.mozilla.org/ja/docs/Web/API/ReadableStream
 
@@ -352,7 +359,7 @@ https://developer.mozilla.org/ja/docs/Web/API/ReadableStream
 ## メニュー機能(:Denite menu)
 
 `denite.nvim` にはメニュー機能があります。
-自分が使用していないので実装しないことにしました。
+しかし自分が使用していないので `ddu.vim` では実装しないことにしました。
 ただし `ddu.vim` には実行中の source を切り替える機能が存在するので、ユーザーがメニューを独自に実装することが可能です。
 
 
@@ -381,6 +388,8 @@ https://github.com/Shougo/ddu-ui-ff
 https://github.com/Shougo/ddu-file_rec
 https://github.com/Shougo/ddu-filter-matcher_substring
 https://github.com/Shougo/ddu-kind-file
+
+Note: ちなみに、`ddu-source-file_rec` は `ddu-kind-file` に依存しているので `ddu-source-file_rec` を利用するなら `ddu-kind-file` のインストールは必須です。
 
 `ddu.vim` の設定は以下のように行います。
 
@@ -419,7 +428,7 @@ call ddu#start({})
 ![ddu.vim](/images/ddu.png)
 
 `ddu-ui-ff` にはデフォルトキーマッピングが存在しないので、`ddu-ui-ff` のウインドウが表示されてもこれだけでは操作ができません。
-以下のようにキーマッピングを設定する必要があります。これは `denite.nvim` の設定に慣れている人ならば理解しやすいでしょう。
+以下のようにキーマッピングを設定する必要があります。これは `denite.nvim` でも同様の仕様のため、 `denite.nvim` の設定に慣れている人ならば理解しやすいでしょう。
 
 ```vim
 autocmd FileType ddu-ff call s:ddu_my_settings()
@@ -447,7 +456,7 @@ endfunction
 
 `ddu-ui-ff` は filetype `ddu-ff` のバッファーを生成するので、それを利用してキーマッピングの設定を行います。
 
-`ddu#ui#ff#do_action` は UI 固有のアクションを実行するための機能です。`denite.nvim` でいうと `denite#do_map()` に相当します。
+`ddu#ui#ff#do_action()` は UI 固有のアクションを実行するための機能です。`denite.nvim` でいうと `denite#do_map()` に相当します。
 
 `itemAction` は選択した item またはカーソル上の item の item アクションを実行する機能です。`denite.nvim` でいうと `do_action` に相当します。
 このアクションは引数に item アクション名をとりますが、省略するとデフォルトアクションとなります。
@@ -476,7 +485,7 @@ call ddu#custom#patch_global({
 
 `split` は `ddu-ui-ff` ウインドウの分割設定を変更する `ddu-ui-ff` 固有の設定なので `uiParams` の `ff` をキーに設定しています。
 
-これで最低限の解説は終了です。基本は分かったはずですので、あとはddc.vimを設定していきながら学んでいきましょう。
+これで最低限の解説は終了です。基本は分かったはずですので、あとは `ddu.vim` を設定していきながら学んでいきましょう。
 
 
 # これからのプラグイン開発について
