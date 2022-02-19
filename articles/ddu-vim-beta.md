@@ -8,7 +8,9 @@ published: true
 
 # 始めに
 
-Note: この記事は「新世代の自動補完プラグイン ddc.vim」の続編となります。
+::: message
+この記事は「[新世代の自動補完プラグイン ddc.vim](https://zenn.dev/shougo/articles/ddc-vim-beta)」の続編となります。
+:::
 
 `ddc.vim` の開発が一通り終了し、ようやく `ddu.vim` (dark deno-powered ui framework)の開発にとりかかることができました。
 ここにきて一通りの機能がそろいましたので、広くユーザーに使ってもらうフェーズに進めたいと考えています。
@@ -51,7 +53,9 @@ https://github.com/kana/vim-ku
 
 * 機能が少ない
 
-Note: ちなみに `unite.vim` の各種 API は `vim-ku` の影響を受けています。kind という概念や custom API、define で source を定義する部分などです。vim-ku の提唱した UI フレームワークという基本的な概念を自分が再実装し、拡張したのが unite.vim と考えることができます。
+::: message
+ちなみに `unite.vim` の各種 API は `vim-ku` の影響を受けています。kind という概念や custom API、define で source を定義する部分などです。vim-ku の提唱した UI フレームワークという基本的な概念を自分が再実装し、拡張したのが unite.vim と考えることができます。
+:::
 
 `unite.vim` の特徴は以下の通りです。
 
@@ -75,7 +79,9 @@ Note: ちなみに `unite.vim` の各種 API は `vim-ku` の影響を受けて�
 
 `unite.vim` の欠点を解消させるために、今後私は新たなプラグインを開発していくことになるのでした。
 
-Note: 余談ですが、`unite.vim` の名前の由来として UI と統合(unite)という意味があります。最初から UI 作成するためのプラグインであったのです。
+::: message
+余談ですが、`unite.vim` の名前の由来として UI と統合(unite)という意味があります。最初から UI 作成するためのプラグインであったのです。
+:::
 
 
 ## denite.nvim 2016/02 頃開発
@@ -173,7 +179,9 @@ https://github.com/Shougo/ddc.vim
 `ddu.vim` は `denops.vim` を用いているので `ddc.vim` のように Vim8/neovim 両方に対応し環境依存も少ないです。
 特に Windows 環境なんかでは嬉しい要素ではないでしょうか。
 
-Note: ただし Deno がうまく動作しない特殊環境では使いにくい可能性があります。それでも Python よりは環境構築が容易です。
+::: message
+ただし Deno がうまく動作しない特殊環境では使いにくい可能性があります。それでも Python よりは環境構築が容易です。
+:::
 
 
 ## ui, source, filter, kind という概念
@@ -234,7 +242,10 @@ https://github.com/yuki-ycino/fzf-preview.vim
 TypeScript はライブラリも豊富なので欲しい機能を簡単に実装できるのも優れています。
 ライブラリの依存関係は自動的に解決され、ユーザーに明示的なインストール処理を要求されません。
 
-Note: その代わり初回起動時にはライブラリをインターネットからダウンロードするオーバーヘッドがあります。インターネット接続環境でない場合には向きませんが、そのような環境にそもそもリッチな編集環境が必要なのだろうかと考えるべきでしょう
+
+::: message
+その代わり初回起動時にはライブラリをインターネットからダウンロードするオーバーヘッドがあります。インターネット接続環境でない場合には向きませんが、そのような環境にそもそもリッチな編集環境が必要なのだろうかと考えるべきでしょう
+:::
 
 
 ## 非同期処理
@@ -263,15 +274,19 @@ ddu.vim file_rec(ネィティブ) 15.85 秒 98 万ファイル
 
 ざっくりと比較すると、`ddu.vim` の候補取得は `denite.nvim` の 1.5 倍高速です。しかも `denite.nvim` より安定しているので `denite.nvim` を使う理由がもはやありません。
 
-Note: ただし、`ddu.vim` でも候補の取得中に強制終了させるとクラッシュするので注意が必要
+::: message
+ただし、`ddu.vim` でも候補の取得中に強制終了させるとクラッシュするので注意が必要です。
+:::
 
 `ddu.vim` は TypeScript を用いることで大幅な高速化に成功しましたが、さすがにネイティブコードを用いた各種ファジーファインダーと比較するとパフォーマンスではやや劣ります。
 しかしネイティブコードを用いるデメリットとして、どうしても柔軟性が下がります。クライアントにはビルド環境が必要ですし、プラグインに拡張機能を同梱することも非常にやりづらいでしょう。
 `ddu.vim` の利点はスクリプト言語の柔軟性がありつつ、パフォーマンスに優れていることにあるかと思います。
 ネイティブコードを用いるとファジーファインダーの抱える全ての問題が解決というほど甘くはないのです。
 
-Note: 例えば `linearf` プラグインはネイティブコードを用いており動作が `ddu.vim` よりも高速ですが、更新の度に全ての拡張プラグインを一度ロードして一つにしてビルドしなければいけません。遅延起動したプラグインとは壊滅的に相性が悪いです。
+::: message
+例えば `linearf` プラグインはネイティブコードを用いており動作が `ddu.vim` よりも高速ですが、更新の度に全ての拡張プラグインを一度ロードして一つにしてビルドしなければいけません。遅延起動したプラグインとは壊滅的に相性が悪いです。
 `ddu.vim` では拡張プラグインを必要なときのみ動的にロードするので遅延起動も問題なく対応できます。
+:::
 
 https://github.com/octaltree/linearf
 
@@ -284,7 +299,7 @@ https://github.com/octaltree/linearf
 
 `ddu.vim` とは異なり、本体にほとんど全てを同梱しているファジーファインダーは多くあります。
 そもそも私が開発した `unite.vim`, `denite.nvim` がそうですし、`fzf-preview` や `telescope.nvim` もそうです。
-インストールするプラグインが少なくて済むのでユーザーとしては便利ですが、本体が肥大化するのが問題になっています。`telescope.nvim` ではビルトイン機能を分離する話も出てきているほどです。
+インストールするプラグインが少なくて済むのでユーザーとしては便利ですが、本体が肥大化するのが問題になっています。そのため `telescope.nvim` ではビルトイン機能を分離する話も出てきているほどです。
 とはいえ、後から分離するとユーザーの反発も大きいでしょうし容易ではありません。`ddu.vim` のように最初から分離するべきであったと言えるでしょう。
 
 https://github.com/nvim-telescope/telescope.nvim/issues/1228
@@ -389,7 +404,9 @@ https://github.com/Shougo/ddu-source-file_rec
 https://github.com/Shougo/ddu-filter-matcher_substring
 https://github.com/Shougo/ddu-kind-file
 
-Note: ちなみに、`ddu-source-file_rec` は `ddu-kind-file` に依存しているので `ddu-source-file_rec` を利用するなら `ddu-kind-file` のインストールは必須です。
+::: message
+ちなみに、`ddu-source-file_rec` は `ddu-kind-file` に依存しているので `ddu-source-file_rec` を利用するなら `ddu-kind-file` のインストールは必須です。
+:::
 
 `ddu.vim` の設定は以下のように行います。
 
