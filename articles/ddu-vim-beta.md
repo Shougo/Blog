@@ -508,6 +508,18 @@ call ddu#custom#patch_global({
 
 `split` は `ddu-ui-ff` ウインドウの分割設定を変更する `ddu-ui-ff` 固有の設定なので `uiParams` の `ff` をキーに設定しています。
 
+他のファジーファインダーのように、`ddu-ui-ff` ウインドウを開いたときに自動的に filter window を開いてほしい場合は次のように設定します。
+
+```vim
+call ddu#custom#patch_global({
+    \   'uiParams': {
+    \     'ff': {
+    \       'startFilter': v:true,
+    \     }
+    \   },
+    \ })
+```
+
 これで最低限の解説は終了です。基本は分かったはずですので、あとは `ddu.vim` を設定していきながら学んでいきましょう。
 
 
