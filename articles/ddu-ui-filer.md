@@ -129,7 +129,7 @@ https://zenn.dev/lambdalisue/articles/3deb92360546d526381f#%E5%90%84%E3%83%97%E3
 | サイドバースタイル | o | o |
 | 複数ウィンドウ | o | o |
 | ツリー表示 | o | o |
-| リモートファイル | △ | o |
+| リモートファイル | △ | 0 |
 | 圧縮ファイル | - | - |
 | ファイル操作 | o | o |
 | ゴミ箱 | o | △ |
@@ -354,6 +354,31 @@ call ddu#custom#patch_global({
 ```
 
 `split` は `ddu-ui-filer` ウインドウの分割設定を変更する `ddu-ui-filer` 固有の設定なので `uiParams` の `filer` をキーに設定しています。
+
+`ddu-ui-filer` の応用例は無限大であるということを少し示します。
+ファイラーでよくある、隠しファイルを表示非表示にするには以下のように定義します。
+
+```vim
+nnoremap <buffer> >
+\ <Cmd>call ddu#ui#filer#do_action('updateOptions', {
+\   'sourceOptions': {
+\     '_': {
+\       'matchers': ToggleHidden(),
+\     },
+\   },
+\ })<CR>
+
+function! ToggleHidden()
+  let current = ddu#custom#get_current(b:ddu_ui_name)
+  let source_options = get(current, 'sourceOptions', {})
+  let source_options_all = get(source_options, '_', {})
+  let matchers = get(source_options_all, 'matchers', [])
+  return empty(matchers) ? ['matcher_hidden'] : []
+endfunction
+```
+
+上記のコードでは `matchers` を動的に変更し、`matcher_hidden` を使うことで実現していることが分かるかと思います。
+ファイラーとして基本的な機能も `ddu-ui-filer` ではなく、あくまで `ddu.vim` の知識だけで実現できるということがポイントです。
 
 これで最低限の解説は終了です。基本は分かったはずですので、あとは `ddu-ui-filer` を設定していきながら学んでいきましょう。
 
