@@ -257,7 +257,7 @@ https://github.com/Shougo/ddu-column-filename
 
 - <https://deno.land/>
 - <https://github.com/vim-denops/denops.vim>
-- <https://github.com/vim-denops/ddu.vim>
+- <https://github.com/Shougo/ddu.vim>
 
 ここではプラグインと依存関係はすでにインストール済み、ロード済みとして話を続けます。
 
