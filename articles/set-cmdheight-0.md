@@ -110,9 +110,9 @@ https://www.reddit.com/r/neovim/comments/vc75v7/cmdheight0_vimtpipeline_a_match_
 neovim 0.8 が正式リリースされる前には安定化させないといけないと思います。
 もちろん自分でも日常的に `cmdheight = 0` 機能を使うようにしています。
 
-現在、以下で `cmdheight = 0` 機能の修正を行っているので確認してみてください。
-
-https://github.com/neovim/neovim/pull/18961
+::: message
+現在はほぼ修正が完了して安心して使えるレベルになったと思います。
+:::
 
 
 # 全てのメッセージ出力に「Hit enter プロンプト」が出てくることについて
@@ -166,9 +166,12 @@ neovim でもここまで苦労しているのに Vim で同じ機能を実装�
 
 ::: message
 neovim のパッチは概ね完成しました。
-現在は Vim への `cmdheight = 0` パッチの移植作業を進めています。Vim でもおおむね動作するようにはなりましたが、まだまだ未完成です。
+その後 Vim への `cmdheight = 0` パッチの移植作業を進めていました。
 
 https://github.com/vim/vim/pull/10675
+
+`vim-9.0.0114` でマージされたので、Vim ユーザーでも同じ機能を使うことができるようになっています。
+皆さんも試してみてください。
 :::
 
 
