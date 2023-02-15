@@ -1,5 +1,5 @@
 ---
-title: "自動補完プラグイン ddu.vim の拡張方法について"
+title: "ファジーファインダープラグイン ddu.vim の拡張方法について"
 emoji: "🪄"
 type: "tech"
 topics: ["vim", "neovim", "denops"]
