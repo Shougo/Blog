@@ -244,6 +244,7 @@ import {
   ActionFlags,
   BaseKind,
   DduItem,
+  PreviewContext,
 } from "https://deno.land/x/ddu_vim@v2.2.0/types.ts";
 import { Denops, fn, vars } from "https://deno.land/x/ddu_vim@v2.2.0/deps.ts";
 
@@ -267,6 +268,23 @@ export class Kind extends BaseKind<Params> {
     },
   };
 
+  override async getPreviewer(args: {
+    denops: Denops;
+    item: DduItem;
+    actionParams: unknown;
+    previewContext: PreviewContext;
+  }): Promise<Previewer | undefined> {
+    const action = args.item.action as ActionData;
+    if (!action) {
+      return undefined;
+    }
+
+    return {
+      kind: "buffer",
+      path: action.path,
+    };
+  }
+
   override params(): Params {
     return {};
   }
@@ -283,6 +301,15 @@ export class Kind extends BaseKind<Params> {
 * `ActionFlags.Persist`: アクションの実行後、UI を閉じない。
 
 ちなみに、`kind` のデフォルトアクションはユーザーが指定するので `kind` 側で指定できません。
+
+`kind` は `getPreviewer()` により独自の `previewer` を指定することが可能です。
+`previewer` は UI の `preview` アクションの挙動を制御するための機能です。
+
+`previewer` は以下のどれかを返さないといけません。それぞれの型の詳細は `https://deno.land/x/ddu_vim@v2.2.0/types.ts` を参照してください。
+
+* `TerminalPreviewer`: アイテムを `:terminal` で特定コマンドの実行によりプレビューする
+* `BufferPreviewer`: バッファもしくはパスに紐付くアイテムをプレビューする
+* `NoFilePreviewer`: バッファに紐付かないアイテムをプレビューする
 
 
 この `kind` を `source` 側で使用するには以下のように `source` の `kind` として指定する必要があります。
