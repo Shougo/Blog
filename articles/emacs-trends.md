@@ -124,6 +124,8 @@ https://github.com/minad/vertico/wiki/Migrating-from-Selectrum-to-Vertico
 
 `vertico.el` でファジーファインダーを実現する場合は、以下のように単一機能を持つ複数のプラグインをユーザーが組み合わせて使用します。
 
+* Emacs 標準 API(`(completing-read)` 等): ファジーファインダーフレームワーク。
+
 * `vertico.el`: ミニバッファを用いたファジーファインダー UI。
 
 * `consult.el`: コマンドの提供、候補リストの作成。
@@ -135,6 +137,8 @@ https://github.com/minad/vertico/wiki/Migrating-from-Selectrum-to-Vertico
 * `embark.el`: アクションを実行する。
 
 これだと Vimmer には分かりにくいかもしれないので `ddu.vim` の各種機能で表現すると、以下のようになります。
+
+* Emacs 標準 API(`(completing-read)` 等): ddu.vim 相当。
 
 * `vertico.el`: UI 相当。
 
