@@ -30,10 +30,13 @@ https://github.com/emacs-jp/anything
 
 https://gist.github.com/Shougo/7fc95389ab6fddac7f78deb6ce42e82a
 
+::: message
 `anything.el` もそうですが、Emacs のファジーファインダーは汎用コマンドが引数により挙動を変えるのではなく、単一の機能を持つコマンドを複数定義するようになっています。
 例えば、Vim のファジーファインダーは `汎用コマンド source 名` という呼び出し形式が一般的です。
-しかし Emacs だとそれぞれの source 毎に `anything-file`, `anything-buffer`, ... となります。
-これは Vim と異なりユーザーが動的にコマンドに引数を渡せないためです。
+しかし Emacs だと引数はなく、それぞれの source 毎に `anything-file`, `anything-buffer`, ... というコマンドとなります。
+これは Vim と異なり Emacs だとユーザーが動的にコマンドに引数を渡すには対話入力しかないからです。
+例えるならばシェルでコマンドを実行するときにユーザーがコマンドの引数を直接渡せない、コマンド実行後に対話的に渡すしかないというと分かりやすいでしょうか。
+:::
 
 `anything.el` の配布は Emacs-jp のリポジトリで行われているようですが、開発はされてないようです(2023 年 3 月現在)。
 
