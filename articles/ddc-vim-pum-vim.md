@@ -193,7 +193,6 @@ function! CommandlinePre() abort
     cnoremap <C-e>   <Cmd>call pum#map#cancel()<CR>
 
     autocmd User DDCCmdlineLeave ++once call CommandlinePost()
-    autocmd InsertEnter <buffer> ++once call CommandlinePost()
 
     " Enable command line completion for the buffer
     call ddc#enable_cmdline_completion()
