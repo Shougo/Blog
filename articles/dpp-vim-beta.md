@@ -65,9 +65,9 @@ https://github.com/Shougo/neocomplcache.vim
 
 ## vim-pathogen (2008/10 頃)
 
-2008 年になると `vim-pathogen` というプラグインマネージャーが使われるようになりました。
-
 https://github.com/tpope/vim-pathogen
+
+2008 年になると `vim-pathogen` というプラグインマネージャーが使われるようになりました。
 
 当時 github が出たばかりであったため、`vim-pathogen` は git, github 前提のプラグインマネージャーとまではいえないでしょう。
 しかしプラグインが大きくなり手で管理できなくなったので `vim-pathogen` が登場したのは想像に難くありません。
@@ -88,9 +88,9 @@ https://github.com/tpope/vim-pathogen
 
 ## Vundle.vim (2010/10 頃)
 
-2010 年から 2011 年にかけて、一世を風靡したのは `Vundle.vim` というプラグインマネージャーでした。
-
 https://github.com/VundleVim/Vundle.vim
+
+2010 年から 2011 年にかけて、一世を風靡したのは `Vundle.vim` というプラグインマネージャーでした。
 
 `Vundle.vim` が広く使われるようになったのは、「プラグインマネージャーにインストール機能を統合した」ためでしょう。
 これは明らかに git, github を前提とした仕組みです。面倒なインストール作業を git, github 前提にすることで簡単にしたため、爆発的に流行しました。
@@ -125,6 +125,8 @@ https://github.com/sunaku/vim-unbundle
 
 ## vim-plug (2013/09 頃)
 
+https://github.com/junegunn/vim-plug
+
 `Vundle.vim` の開発が停滞していたころ、2013 年 9 月に現れたのは `vim-plug` でした。
 
 `vim-plug` の思想としてはプラグインマネージャーをシンプル化し、1 ファイルで配布することでインストールを容易にしようというものです。
@@ -144,6 +146,8 @@ https://github.com/Shougo/dein.vim
 
 
 ## Vim packages 機能(2016/09 頃正式リリース)
+
+`:help packages`
 
 Vim 8.0 の目玉機能の一つとして、Vim にパッケージ管理機能(`packages`)が追加されました。
 
@@ -170,13 +174,13 @@ https://zenn.dev/kuu/articles/vim-pack-attention
 
 ## minpac (2017/02 頃)
 
+https://github.com/k-takata/minpac
+
 Vim 本体への `packages` 機能の実装により、`packages` を利用した幾つものプラグインマネージャーが開発されていきます。
 
 `minpac` は `packages` 機能を用いてシンプルに実装されたプラグインマネージャーです。
 Vim の `packages` 機能を使いやすくしたフロントエンドともいえます。
 `packages` 機能が好きならよい選択肢だと思います。
-
-https://github.com/k-takata/minpac
 
 
 ## packer.nvim (2017/11 頃)
