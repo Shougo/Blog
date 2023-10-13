@@ -271,9 +271,9 @@ https://github.com/Shougo/dpp.vim
 `dpp.vim` は `dein.vim` の備えるほとんどの機能を拡張機能として実装しています。
 例えば以下のようなものが挙げられます。
 
-* プラグインのインストール(`dpp-ext-install`)
+* プラグインのインストール(`dpp-ext-installer`)
 
-https://github.com/Shougo/dpp-ext-install
+https://github.com/Shougo/dpp-ext-installer
 
 * toml サポート(`dpp-ext-toml`)
 
