@@ -419,7 +419,7 @@ const s:dpp_base = '~/.cache/dpp/'
 
 " Set dpp source path (required)
 const s:dpp_src = '~/.cache/dpp/repos/github.com/Shougo/dpp.vim'
-const s:denops_src = '~/.cache/dpp/repos/github.com/denops/denops.vim'
+const s:denops_src = '~/.cache/dpp/repos/github.com/vim-denops/denops.vim'
 
 " Set dpp runtime path (required)
 execute 'set runtimepath^=' .. s:dpp_src
