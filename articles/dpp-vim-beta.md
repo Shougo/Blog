@@ -525,6 +525,17 @@ import {
 } from "https://deno.land/x/dpp_vim@v0.0.2/types.ts";
 import { Denops, fn } from "https://deno.land/x/dpp_vim@v0.0.2/deps.ts";
 
+type Toml = {
+  hooks_file?: string;
+  ftplugins?: Record<string, string>;
+  plugins: Plugin[];
+};
+
+type LazyMakeStateResult = {
+  plugins: Plugin[];
+  stateLines: string[];
+};
+
 export class Config extends BaseConfig {
   override async config(args: {
     denops: Denops;
@@ -541,23 +552,44 @@ export class Config extends BaseConfig {
 
     const [context, options] = await args.contextBuilder.get(args.denops);
 
-    const tomlPlugins = await args.dpp.extAction(
+    // Load toml plugins
+    const tomls: Toml[] = [];
+    tomls.push(await args.dpp.extAction(
       args.denops,
       context,
       options,
       "toml",
       "load",
       {
-        path: "$BASE_DIR/deinlazy.toml",
+        path: "$BASE_DIR/dein.toml",
         options: {
-          lazy: true,
+          lazy: false,
         },
       },
-    ) as Plugin[];
+    ) as Toml);
 
+    // Merge toml results
     const recordPlugins: Record<string, Plugin> = {};
-    for (const plugin of tomlPlugins) {
-      recordPlugins[plugin.name] = plugin;
+    const ftplugins: Record<string, string> = {};
+    const hooksFiles: string[] = [];
+    for (const toml of tomls) {
+      for (const plugin of toml.plugins) {
+        recordPlugins[plugin.name] = plugin;
+      }
+
+      if (toml.ftplugins) {
+        for (const filetype of Object.keys(toml.ftplugins)) {
+          if (ftplugins[filetype]) {
+            ftplugins[filetype] += `\n${toml.ftplugins[filetype]}`;
+          } else {
+            ftplugins[filetype] = toml.ftplugins[filetype];
+          }
+        }
+      }
+
+      if (toml.hooks_file) {
+        hooksFiles.push(toml.hooks_file);
+      }
     }
 
     const localPlugins = await args.dpp.extAction(
@@ -587,7 +619,7 @@ export class Config extends BaseConfig {
       }
     }
 
-    const stateLines = await args.dpp.extAction(
+    const lazyResult = await args.dpp.extAction(
       args.denops,
       context,
       options,
@@ -596,11 +628,13 @@ export class Config extends BaseConfig {
       {
         plugins: Object.values(recordPlugins),
       },
-    ) as string[];
+    ) as LazyMakeStateResult;
 
     return {
-      plugins: Object.values(recordPlugins),
-      stateLines,
+      ftplugins,
+      hooksFiles,
+      plugins: lazyResult.plugins,
+      stateLines: lazyResult.stateLines,
     };
   }
 }
