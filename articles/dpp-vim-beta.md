@@ -20,6 +20,8 @@ https://github.com/Shougo/dpp.vim
 しかし、その設計思想とインタフェースは十分固まったといえるので今回記事を書くことにしました。
 
 ::: message
+当時の完成度はまだまだでしたがその後、開発が進んだことで `dpp.vim` はようやくユーザーに推奨できるプラグインマネージャーへと成長しました。
+
 ちなみに、私が以前に作成したプラグインマネージャーである `dein.vim` は既に開発を終了しました。
 :::
 
@@ -554,7 +556,7 @@ export class Config extends BaseConfig {
 
     // Load toml plugins
     const tomls: Toml[] = [];
-    tomls.push(await args.dpp.extAction(
+    const toml = await args.dpp.extAction(
       args.denops,
       context,
       options,
@@ -566,7 +568,10 @@ export class Config extends BaseConfig {
           lazy: false,
         },
       },
-    ) as Toml);
+    ) as Toml | undefined;
+    if (toml) {
+      tomls.push();
+    }
 
     // Merge toml results
     const recordPlugins: Record<string, Plugin> = {};
@@ -605,17 +610,19 @@ export class Config extends BaseConfig {
           merged: false,
         },
       },
-    ) as Plugin[];
+    ) as Plugin[] | undefined;
 
-    // Merge localPlugins
-    for (const plugin of localPlugins) {
-      if (plugin.name in recordPlugins) {
-        recordPlugins[plugin.name] = Object.assign(
-          recordPlugins[plugin.name],
-          plugin,
-        );
-      } else {
-        recordPlugins[plugin.name] = plugin;
+    if (localPlugins) {
+      // Merge localPlugins
+      for (const plugin of localPlugins) {
+        if (plugin.name in recordPlugins) {
+          recordPlugins[plugin.name] = Object.assign(
+            recordPlugins[plugin.name],
+            plugin,
+          );
+        } else {
+          recordPlugins[plugin.name] = plugin;
+        }
       }
     }
 
@@ -628,13 +635,13 @@ export class Config extends BaseConfig {
       {
         plugins: Object.values(recordPlugins),
       },
-    ) as LazyMakeStateResult;
+    ) as LazyMakeStateResult | undefined;
 
     return {
       ftplugins,
       hooksFiles,
-      plugins: lazyResult.plugins,
-      stateLines: lazyResult.stateLines,
+      plugins: lazyResult?.plugins ?? [],
+      stateLines: lazyResult?.stateLines ?? [],
     };
   }
 }
