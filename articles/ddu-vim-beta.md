@@ -415,17 +415,17 @@ https://github.com/Shougo/ddu-kind-file
 `ddu.vim` の設定は以下のように行います。
 
 ```vim
-call ddu#custom#patch_global({
-    \   'ui': 'ff',
-    \   'sources': [{'name': 'file_rec', 'params': {}}],
-    \   'sourceOptions': {
-    \     '_': {
-    \       'matchers': ['matcher_substring'],
+call ddu#custom#patch_global(#{
+    \   ui: 'ff',
+    \   sources: [#{name: 'file_rec', params: {}}],
+    \   sourceOptions: #{
+    \     _: #{
+    \       matchers: ['matcher_substring'],
     \     },
     \   },
-    \   'kindOptions': {
-    \     'file': {
-    \       'defaultAction': 'open',
+    \   kindOptions: #{
+    \     file: #{
+    \       defaultAction: 'open',
     \     },
     \   }
     \ })
@@ -465,16 +465,6 @@ function! s:ddu_my_settings() abort
   nnoremap <buffer><silent> q
         \ <Cmd>call ddu#ui#ff#do_action('quit')<CR>
 endfunction
-
-autocmd FileType ddu-ff-filter call s:ddu_filter_my_settings()
-function! s:ddu_filter_my_settings() abort
-  inoremap <buffer><silent> <CR>
-  \ <Esc><Cmd>close<CR>
-  nnoremap <buffer><silent> <CR>
-  \ <Cmd>close<CR>
-  nnoremap <buffer><silent> q
-  \ <Cmd>close<CR>
-endfunction
 ```
 
 `ddu-ui-ff` は filetype `ddu-ff` のバッファーを生成するので、それを利用してキーマッピングの設定を行います。
@@ -485,23 +475,21 @@ endfunction
 このアクションは引数に item アクション名をとりますが、省略するとデフォルトアクションとなります。
 
 `ddu-ui-ff` において、絞り込みを行うには `openFilterWindow` アクションで filter window を開かなければいけません。
-これは `denite.nvim` と同じ仕様となります。filter window を開くと以下のようになります。
+これは `denite.nvim` と同じ仕様となります。
 
-![ddu-filter.vim](/images/ddu-filter.png)
-
-filter window のキーマッピングは `FileType ddu-ff-filter` autocmd で設定します。
-`denite.nvim` とは異なり、`ddu-ui-ff` の filter window にはデフォルトで何もマッピングがされていません。
+filter window のキーマッピングは `User Ddu:ui:ff:openFilterWindow` autocmd で設定します。
+`denite.nvim` とは異なり、`ddu-ui-ff` の filter window は `input()` による入力でありコマンドラインモードです。
 
 `ddu.vim` において特に注意しないといけないことは、UI の設定は全て `uiOptions` や `uiParams` に記述するということです。
 ユーザーはそれが何の設定であるか把握しておく必要があります。
 例えば、neovim の floating window 機能で `ddu-ui-ff` のウインドウを表示したい場合以下のように設定をします。
 
 ```vim
-call ddu#custom#patch_global({
-    \   'uiParams': {
-    \     'ff': {
-    \       'split': 'floating',
-    \     }
+call ddu#custom#patch_global(#{
+    \   uiParams: #{
+    \     ff: #{
+    \       split: 'floating',
+    \     },
     \   },
     \ })
 ```
@@ -511,13 +499,8 @@ call ddu#custom#patch_global({
 他のファジーファインダーのように、`ddu-ui-ff` ウインドウを開いたときに自動的に filter window を開いてほしい場合は次のように設定します。
 
 ```vim
-call ddu#custom#patch_global({
-    \   'uiParams': {
-    \     'ff': {
-    \       'startFilter': v:true,
-    \     }
-    \   },
-    \ })
+autocmd User Ddu:uiDone ++nested
+      \ call ddu#ui#async_action('openFilterWindow')
 ```
 
 これで最低限の解説は終了です。基本は分かったはずですので、あとは `ddu.vim` を設定していきながら学んでいきましょう。
