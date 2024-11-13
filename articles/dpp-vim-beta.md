@@ -545,17 +545,6 @@ import type {
 import type { Denops } from "jsr:@denops/std@~7.3.0";
 import * as fn from "jsr:@denops/std@~7.3.0/function";
 
-type Toml = {
-  hooks_file?: string;
-  ftplugins?: Record<string, string>;
-  plugins: Plugin[];
-};
-
-type LazyMakeStateResult = {
-  plugins: Plugin[];
-  stateLines: string[];
-};
-
 export class Config extends BaseConfig {
   override async config(args: {
     denops: Denops;
