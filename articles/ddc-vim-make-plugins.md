@@ -38,14 +38,13 @@ TypeScript で拡張できるということの利点は、型を用いること
 
 ```typescript
 import {
-  BaseSource,
-  DdcOptions,
-  Item,
-  SourceOptions,
-} from "https://deno.land/x/ddc_vim@v3.4.0/types.ts";
-import {
-  Denops,
-} from "https://deno.land/x/ddc_vim@v3.4.0/deps.ts";
+  type DdcOptions,
+  type Item,
+  type SourceOptions,
+} from "jsr:@shougo/ddc-vim@~7.0.0/types";
+import { BaseSource } from "jsr:@shougo/ddc-vim@~7.0.0/source";
+
+import type { Denops } from "jsr:@denops/core@~7.0.0";
 
 type Params = Record<never, never>;
 
@@ -125,10 +124,8 @@ https://deno.land/x/ddc_vim@v3.4.0
 `completeStr` は補完文字列が渡されます。
 
 ```typescript
-import {
-  BaseFilter,
-  Item,
-} from "https://deno.land/x/ddc_vim@v3.4.0/types.ts";
+import { type Item } from "jsr:@shougo/ddc-vim@~7.0.0/types";
+import { BaseFilter } from "jsr:@shougo/ddc-vim@~7.0.0/filter";
 
 type Params = {
   foot: string;

@@ -42,14 +42,19 @@ TypeScript で拡張できるということの利点は、型を用いること
 
 ```typescript
 import {
-  BaseSource,
-  DduOptions,
-  Item,
-  SourceOptions,
-} from "https://deno.land/x/ddu_vim@v2.2.0/types.ts";
-import { Denops, fn } from "https://deno.land/x/ddu_vim@v2.2.0/deps.ts";
-import { join } from "https://deno.land/std@0.171.0/path/mod.ts";
-import { ActionData } from "https://deno.land/x/ddu_kind_file@v0.3.2/file.ts";
+  type Context,
+  type DduOptions,
+  type Item,
+  type SourceOptions,
+} from "jsr:@shougo/ddu-vim@~6.1.0/types";
+import { BaseSource } from "jsr:@shougo/ddu-vim@~6.1.0/source";
+
+import { type ActionData } from "jsr:@shougo/ddu-kind-file@~0.9.0";
+
+import type { Denops } from "jsr:@denops/core@~7.0.0";
+import * as fn from "jsr:@denops/std@~7.1.0/function";
+
+import { join } from "jsr:@std/path@~1.0.2/join";
 
 type Params = Record<never, never>;
 
@@ -158,11 +163,12 @@ call ddu#start({})
 
 ```typescript
 import {
-  BaseFilter,
-  DduItem,
-  SourceOptions,
-} from "https://deno.land/x/ddu_vim@v2.0.0/types.ts";
-import { Denops } from "https://deno.land/x/ddu_vim@v2.0.0/deps.ts";
+  type DduItem,
+  type SourceOptions,
+} from "jsr:@shougo/ddu-vim@~6.1.0/types";
+import { BaseFilter } from "jsr:@shougo/ddu-vim@~6.1.0/filter";
+
+import type { Denops } from "jsr:@denops/core@~7.0.0";
 
 type Params = {
   foot: string;
@@ -240,14 +246,16 @@ call ddu#start({})
 
 ```typescript
 import {
-  ActionArguments,
-  ActionFlags,
-  BaseKind,
-  DduItem,
-  PreviewContext,
-} from "https://deno.land/x/ddu_vim@v2.2.0/types.ts";
-import { Denops, fn, vars } from "https://deno.land/x/ddu_vim@v2.2.0/deps.ts";
+  type ActionArguments,
+  type ActionFlags,
+  type DduItem,
+  type PreviewContext,
+} from "jsr:@shougo/ddu-vim@~6.1.0/types";
+import { BaseKind } from "jsr:@shougo/ddu-vim@~6.1.0/kind";
 
+import type { Denops } from "jsr:@denops/core@~7.0.0";
+import * as fn from "jsr:@denops/std@~7.1.0/function";
+import * as vars from "jsr:@denops/std@~7.3.0/variable";
 
 export type ActionData = {
   path: string;
