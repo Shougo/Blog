@@ -42,6 +42,8 @@ Shougoism とは Vimconf 2024 登壇者 ryoppippi 氏によって名付けられ
 
 https://vimconf.org/2024/sessions/#link-ryoppippi
 
+https://slides.vimconf.org/2024/10-lambdalisue-cant_help_falling_in_vim.pdf
+
 テキストエディタは人生の目的、テキストエディタの全てが設定可能であることは喜びとする。テキストエディタは何よりも優先される。
 テキストエディタとのシンクロニシティを高めることで、心も体もテキストエディタと一つになることを最終目標としている。
 
