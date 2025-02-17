@@ -457,19 +457,19 @@ call ddu#custom#patch_global(#{
 autocmd FileType ddu-ff call s:ddu_my_settings()
 function! s:ddu_my_settings() abort
   nnoremap <buffer><silent> <CR>
-        \ <Cmd>call ddu#ui#ff#do_action('itemAction')<CR>
+        \ <Cmd>call ddu#ui#do_action('itemAction')<CR>
   nnoremap <buffer><silent> <Space>
-        \ <Cmd>call ddu#ui#ff#do_action('toggleSelectItem')<CR>
+        \ <Cmd>call ddu#ui#do_action('toggleSelectItem')<CR>
   nnoremap <buffer><silent> i
-        \ <Cmd>call ddu#ui#ff#do_action('openFilterWindow')<CR>
+        \ <Cmd>call ddu#ui#do_action('openFilterWindow')<CR>
   nnoremap <buffer><silent> q
-        \ <Cmd>call ddu#ui#ff#do_action('quit')<CR>
+        \ <Cmd>call ddu#ui#do_action('quit')<CR>
 endfunction
 ```
 
 `ddu-ui-ff` は filetype `ddu-ff` のバッファーを生成するので、それを利用してキーマッピングの設定を行います。
 
-`ddu#ui#ff#do_action()` は UI 固有のアクションを実行するための機能です。`denite.nvim` でいうと `denite#do_map()` に相当します。
+`ddu#ui#do_action()` は UI 固有のアクションを実行するための機能です。`denite.nvim` でいうと `denite#do_map()` に相当します。
 
 `itemAction` は選択した item またはカーソル上の item の item アクションを実行する機能です。`denite.nvim` でいうと `do_action` に相当します。
 このアクションは引数に item アクション名をとりますが、省略するとデフォルトアクションとなります。
@@ -477,7 +477,7 @@ endfunction
 `ddu-ui-ff` において、絞り込みを行うには `openFilterWindow` アクションで filter window を開かなければいけません。
 これは `denite.nvim` と同じ仕様となります。
 
-filter window のキーマッピングは `User Ddu:ui:ff:openFilterWindow` autocmd で設定します。
+filter window のキーマッピングは `User Ddu:uiOpenFilterWindow` autocmd で設定します。
 `denite.nvim` とは異なり、`ddu-ui-ff` の filter window は `input()` による入力でありコマンドラインモードです。
 
 `ddu.vim` において特に注意しないといけないことは、UI の設定は全て `uiOptions` や `uiParams` に記述するということです。
