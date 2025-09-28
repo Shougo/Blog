@@ -321,20 +321,20 @@ call ddu#custom#patch_global({
 autocmd FileType ddu-filer call s:ddu_my_settings()
 function! s:ddu_my_settings() abort
   nnoremap <buffer><silent> <CR>
-        \ <Cmd>call ddu#ui#filer#do_action('itemAction')<CR>
+        \ <Cmd>call ddu#ui#do_action('itemAction')<CR>
   nnoremap <buffer><silent> <Space>
-        \ <Cmd>call ddu#ui#filer#do_action('toggleSelectItem')<CR>
+        \ <Cmd>call ddu#ui#do_action('toggleSelectItem')<CR>
   nnoremap <buffer> o
-        \ <Cmd>call ddu#ui#filer#do_action('expandItem',
+        \ <Cmd>call ddu#ui#do_action('expandItem',
         \ {'mode': 'toggle'})<CR>
   nnoremap <buffer><silent> q
-        \ <Cmd>call ddu#ui#filer#do_action('quit')<CR>
+        \ <Cmd>call ddu#ui#do_action('quit')<CR>
 endfunction
 ```
 
 `ddu-ui-filer` は filetype `ddu-filer` のバッファーを生成するので、それを利用してキーマッピングの設定を行います。
 
-`ddu#ui#filer#do_action()` は UI 固有のアクションを実行するための機能です。
+`ddu#ui#do_action()` は UI 固有のアクションを実行するための機能です。
 
 `itemAction` は選択した item またはカーソル上の item の item アクションを実行する機能です。`defx.nvim` でいうと `do_action` に相当します。
 このアクションは引数に item アクション名をとりますが、省略するとデフォルトアクションとなります。
@@ -360,7 +360,7 @@ call ddu#custom#patch_global({
 
 ```vim
 nnoremap <buffer> >
-\ <Cmd>call ddu#ui#filer#do_action('updateOptions', {
+\ <Cmd>call ddu#ui#do_action('updateOptions', {
 \   'sourceOptions': {
 \     '_': {
 \       'matchers': ToggleHidden(),
