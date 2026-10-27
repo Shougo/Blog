@@ -14,7 +14,7 @@ published: false
 
 ## goda-cmp.vim とは
 
-goda-cmp.vim は、Vim/Neovim 両対応の自動補完プラグインです。ddc.vim の精神的な後継にあたります。
+[goda-cmp.vim](https://github.com/Shougo/goda-cmp.vim) は、Vim/Neovim 両対応の自動補完プラグインです。ddc.vim の精神的な後継にあたります。
 
 - 補完の本体は [goda.vim](https://github.com/Shougo/goda.vim) の上で動きます
 - source、filter、UI は本体から分離した拡張です
