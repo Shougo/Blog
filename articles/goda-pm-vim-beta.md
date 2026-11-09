@@ -11,11 +11,13 @@ published: false
 これまで goda.vim の上に、ddu.vim や ddc.vim など私の作成した denops プラグインを移植してきました。goda-fi.vim、goda-cmp.vim、goda-term.vim、goda-hex.vim、goda-skk.vim といったプラグインです。そして最後に残っていたのがプラグインマネージャー、つまり dpp.vim でした。
 
 https://github.com/Shougo/goda-pm.vim
+https://github.com/Shougo/goda-pm-ext
+https://github.com/Shougo/goda-pm-ext-lazy.vim
 
 goda-pm.vim は単に dpp.vim を Go で書き直しただけのものではありません。goda.vim のプラグインを管理するなら goda-pm.vim を使うと楽ができる。この記事ではそれを示したいと思います。
 
 :::message
-goda.vim とそのプラグインはまだ開発中です。version 1.0.0 になりリポジトリの分割が終わるまで、パッケージの場所や設定の書き方は変わる可能性があります。
+goda.vim とそのプラグインはまだ開発中です。version 1.0.0 になるまで、パッケージの場所や設定の書き方は変わる可能性があります。goda-pm.vim はリポジトリの分割を終えていますが、他のプラグインは分割作業中です。
 :::
 
 ## goda.vim とは
@@ -40,6 +42,13 @@ goda.vim のプラグインは、ユーザーが自分の設定（`main.go`）�
 dpp.vim では設定を TypeScript で書きましたが、goda-pm.vim では Go で書きます。
 
 ```go
+import (
+	"github.com/Shougo/goda-pm-ext/ext/installer"
+	"github.com/Shougo/goda-pm-ext/ext/protocol/git"
+	"github.com/Shougo/goda-pm-ext/ext/protocol/http"
+	"github.com/Shougo/goda-pm.vim/pm"
+)
+
 func main() {
 	b := pm.New()
 	b.AddProtocol(git.New())
@@ -56,7 +65,7 @@ func main() {
 
 ### dpp.vim の TOML がそのまま使える
 
-`ext/toml` は dpp-ext-toml と同じ TOML を読みます。dpp.vim で使っていた TOML ファイルは、ほぼそのまま持ってこられます。私自身の設定も TOML には手を入れていません。dpp.vim 本体と拡張の行を goda-pm.vim と goda.vim に置き換えただけです。
+goda-pm-ext の `ext/toml` は dpp-ext-toml と同じ TOML を読みます。dpp.vim で使っていた TOML ファイルは、ほぼそのまま持ってこられます。私自身の設定も TOML には手を入れていません。dpp.vim 本体と拡張の行を goda-pm.vim、goda.vim、goda-pm-ext-lazy.vim に置き換えただけです。
 dpp.vim からの移行はとても楽です。
 
 ```toml
@@ -65,29 +74,34 @@ repo = 'Shougo/goda-pm.vim'
 
 [[plugins]]
 repo = 'Shougo/goda.vim'
+
+[[plugins]]
+repo = 'Shougo/goda-pm-ext-lazy.vim'
 ```
 
-遅延起動（`ext/lazy`）とローカルのプラグインロード（`ext/local`）も dpp.vim と同じように動きます。`on_cmd`、`on_ft`、`on_func`、`on_event`、`on_map`、`hook_add`、`hooks_file`、`multiple_hooks` などもそのままです。
+goda-pm-ext は Go のパッケージだけで Vim script を含まないので、TOML に書く必要はありません。`go.mod` で管理されます。
 
-### 拡張は最初から揃っている
+遅延起動（goda-pm-ext-lazy.vim）とローカルのプラグインロード（goda-pm-ext の `ext/local`）も dpp.vim と同じように動きます。`on_cmd`、`on_ft`、`on_func`、`on_event`、`on_map`、`hook_add`、`hooks_file`、`multiple_hooks` などもそのままです。
 
-dpp.vim ではコアからほとんどの機能を分離し、拡張を一つずつインストールする方式にしていました。goda-pm.vim でもコアと拡張は分かれていますが、拡張は同じモジュールに入っています。
+### 拡張は二つのリポジトリにまとめた
 
-| goda-pm.vim | dpp.vim での相当 |
-|---|---|
-| `ext/protocol/git` | dpp-protocol-git |
-| `ext/protocol/http` | dpp-protocol-http |
-| `ext/installer` | dpp-ext-installer |
-| `ext/toml` | dpp-ext-toml |
-| `ext/local` | dpp-ext-local |
-| `ext/lazy` | dpp-ext-lazy |
-| `ext/fi/pmfi` | ddu-source-dpp（goda-fi.vim のソース） |
+dpp.vim ではコアからほとんどの機能を分離し、拡張を一つずつインストールする方式にしていました。goda-pm.vim でもコアと拡張は分かれていますが、拡張は二つのリポジトリにまとめています。
+
+| リポジトリ | パッケージ | dpp.vim での相当 |
+|---|---|---|
+| goda-pm-ext | `ext/protocol/git` | dpp-protocol-git |
+| goda-pm-ext | `ext/protocol/http` | dpp-protocol-http |
+| goda-pm-ext | `ext/installer` | dpp-ext-installer |
+| goda-pm-ext | `ext/toml` | dpp-ext-toml |
+| goda-pm-ext | `ext/local` | dpp-ext-local |
+| goda-pm-ext | `ext/fi/pmfi` | ddu-source-dpp（goda-fi.vim のソース） |
+| goda-pm-ext-lazy.vim | `ext/lazy` | dpp-ext-lazy |
+
+分け方の基準は Vim script を含むかどうかです。goda-pm-ext は Go のパッケージだけなので、Vim プラグインとしてインストールする必要がありません（名前に `.vim` も付けていません）。設定の `go.mod` に書けば済みます。
+
+一方、遅延起動は起動時のスクリプトから Vim script を呼ぶので、goda-pm-ext-lazy.vim として独立させました。dpp-ext-lazy と同じく、遅延しないプラグインとして `'runtimepath'` に入れておく必要があります。
 
 拡張をバラバラにインストールしなくてよいので、最初の導入はかなり楽になったと思います。http プロトコルは Go でダウンロードと展開を行うので、curl も unzip も tar も要りません。
-
-:::message
-リポジトリの分割をするときに、これらの拡張も別のリポジトリに分ける予定ですが、管理を楽にするために dpp.vim ほどの分割はしない予定です。
-:::
 
 ## goda.vim プラグインの更新が楽になる
 
@@ -145,7 +159,7 @@ hook_post_update = 'call goda_pm#build()'
 
 ### ローカルで開発している goda.vim プラグインも恩恵を受ける
 
-例えば `ext/local` でローカルにある開発中のプラグインを使っている場合、そのディレクトリも `g:goda#workspace` に入ります。開発中のプラグインを書き換えて `goda_xxx#build()` すれば、その変更がそのままバイナリに入ります。
+例えば goda-pm-ext の `ext/local` でローカルにある開発中のプラグインを使っている場合、そのディレクトリも `g:goda#workspace` に入ります。開発中のプラグインを書き換えて `goda_xxx#build()` すれば、その変更がそのままバイナリに入ります。
 
 go.work に入るのは、設定が require しているモジュールだけです。関係のないプラグインの `go.mod` が壊れていても、ビルドには影響しません。
 
@@ -166,8 +180,9 @@ let $BASE_DIR = '<script>:h'->expand()
 let g:goda_pm#config_dir = '$BASE_DIR/goda-pm'->expand()
 
 if s:goda_pm_base->goda_pm#min#load_state()
-  " NOTE: goda.vim is needed to make the state
+  " NOTE: goda.vim and goda-pm-ext-lazy.vim are needed to make the state
   set runtimepath^=~/.cache/goda-pm/repos/github.com/Shougo/goda.vim
+  set runtimepath^=~/.cache/goda-pm/repos/github.com/Shougo/goda-pm-ext-lazy.vim
   autocmd VimEnter * ++once call goda_pm#make_state(s:goda_pm_base)
 endif
 
@@ -180,18 +195,27 @@ dpp.vim との違いは主に二つです。
 - `DenopsReady` を待つ必要がありません。goda.vim は最初の呼び出しで読み込まれます。
 - `make_state()` に設定ファイルのパスを渡しません。設定はプラグインのバイナリにそもそも組込まれているからです。
 
-goda-pm.vim と goda.vim は、最初に git clone しておきます。
+goda-pm.vim、goda.vim、goda-pm-ext-lazy.vim は、最初に git clone しておきます。
 
 ```sh
 git clone https://github.com/Shougo/goda-pm.vim ~/.cache/goda-pm/repos/github.com/Shougo/goda-pm.vim
 git clone https://github.com/Shougo/goda.vim ~/.cache/goda-pm/repos/github.com/Shougo/goda.vim
+git clone https://github.com/Shougo/goda-pm-ext-lazy.vim ~/.cache/goda-pm/repos/github.com/Shougo/goda-pm-ext-lazy.vim
 ```
+
+goda-pm-ext-lazy.vim は、state を作るとき（`lazy.MakeState()`）にも Vim script を呼びます。そのため state がないときは、goda.vim と一緒に `'runtimepath'` へ追加します。
 
 ### Go の設定
 
 `g:goda_pm#config_dir` に Go のモジュールを作ります。私の設定から抜粋します。
 
 ```go
+import (
+	"github.com/Shougo/goda-pm-ext-lazy.vim/ext/lazy"
+	"github.com/Shougo/goda-pm-ext/ext/toml"
+	"github.com/Shougo/goda-pm.vim/pm"
+)
+
 func config(ctx context.Context, c *pm.ConfigArgs) (*pm.ConfigReturn, error) {
 	c.Options.InlineVimrcs = []string{"$BASE_DIR/options.rc.vim"}
 	c.Options.Protocols = []string{"git", "http"}
@@ -235,6 +259,8 @@ dpp.vim の TypeScript の設定と比べると、`getExt()` で拡張を取り�
 cd $BASE_DIR/goda-pm
 go mod init goda-pm-config
 go get github.com/Shougo/goda-pm.vim@latest
+go get github.com/Shougo/goda-pm-ext@latest
+go get github.com/Shougo/goda-pm-ext-lazy.vim@latest
 go mod tidy
 ```
 
@@ -270,7 +296,7 @@ dpp.vim から意図的に外した機能もあります。
 
 ## 今後について
 
-goda.vim のプラグインが安定化したら、そのときはリポジトリを分割して各プラグインを v1.0.0 にする予定です。各プラグインのドキュメントに goda-pm.vim 向けの設定例を載せるのはその後になります。
+goda-pm.vim に続いて、goda-term.vim、goda-fi.vim、goda-cmp.vim もリポジトリを分割しています。分割が終わりプラグインが安定化したら、各プラグインを v1.0.0 にする予定です。各プラグインのドキュメントに goda-pm.vim 向けの設定例を載せるのはその後になります。
 
 ## GitHub sponsors について
 
@@ -280,3 +306,4 @@ goda.vim とそのプラグインの開発は GitHub Sponsors の支援で続け
 goda.vim や goda-pm.vim が便利だと思ったら、ぜひ支援をお願いします。
 
 https://github.com/sponsors/Shougo
+
