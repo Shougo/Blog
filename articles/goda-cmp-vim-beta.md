@@ -17,7 +17,7 @@ published: false
 [goda-cmp.vim](https://github.com/Shougo/goda-cmp.vim) は、Vim/Neovim 両対応の自動補完プラグインです。ddc.vim の精神的な後継にあたります。
 
 - 補完の本体は [goda.vim](https://github.com/Shougo/goda.vim) の上で動きます
-- source、filter、UI は本体から分離した拡張です
+- source、filter、UI は本体から分離した拡張で、それぞれ別のリポジトリにあります
 - 設定は **Go のコード** で書きます
 - ユーザーが自分でプラグインをビルドします
 
@@ -83,11 +83,11 @@ goda-cmp.vim の設定は、自分で持つ小さな Go のモジュールです
 package main
 
 import (
+	"github.com/Shougo/goda-cmp-ext/ext/filter/matcherhead"
+	"github.com/Shougo/goda-cmp-ext/ext/filter/sorterrank"
+	"github.com/Shougo/goda-cmp-ext/ext/source/around"
+	"github.com/Shougo/goda-cmp-ui-pum.vim/ext/ui/pum"
 	"github.com/Shougo/goda-cmp.vim/cmp"
-	"github.com/Shougo/goda-cmp.vim/ext/filter/matcherhead"
-	"github.com/Shougo/goda-cmp.vim/ext/filter/sorterrank"
-	"github.com/Shougo/goda-cmp.vim/ext/source/around"
-	"github.com/Shougo/goda-cmp.vim/ext/ui/pum"
 )
 
 func main() {
@@ -141,7 +141,7 @@ DynamicUI: func(_ context.Context, _ sdk.Host, a cmp.DynamicUIArgs) (string, err
 
 ddc.vim と同じく、goda-cmp.vim 本体は補完の仕組みだけを提供します。何をどう補完するかは、ユーザーが拡張を組み合わせて決めます。
 
-ddc.vim と違うのは、拡張を「プラグインとしてインストールする」必要がない点です。拡張は Go のパッケージなので、使うパッケージを import するだけです。プラグインマネージャに登録するのは、goda.vim、goda-cmp.vim、それに Vim 側の部品を持つ UI(pum.vim など)だけです。
+ddc.vim と違うのは、source と filter を「プラグインとしてインストールする」必要がない点です。source と filter は Go のパッケージなので、使うパッケージを import するだけです。プラグインマネージャに登録するのは、goda.vim、goda-cmp.vim、それに Vim script を持つ UI(goda-cmp-ui-pum.vim と pum.vim など)だけです。
 
 ### コマンドラインと端末での補完
 
@@ -170,9 +170,22 @@ b.AddSource(lsp.New(lsp.Params{
 
 pum.vim の `previewer` オプションに `goda_cmp#get_previewer` を指定すると、選択中の候補のプレビューを表示できます。vim source や cmdline source では、候補のヘルプを表示できます。
 
-### 同梱している拡張
+### 拡張のリポジトリ
 
-まだ開発中であるため、拡張機能のリポジトリ分離はされていません。version 1.0 までは、ddc.vim の拡張から移植したものを `ext/` に同梱しています。名前は元の拡張から `_` を除いたものです(`matcher_head` は `matcherhead`)。パラメータも元の拡張のものをそのまま使えます。
+拡張は、本体とは別のリポジトリに分かれています。分け方の基準は Vim script を含むかどうかです。
+
+| リポジトリ | 中身 |
+|---|---|
+| [goda-cmp-ui-native.vim](https://github.com/Shougo/goda-cmp-ui-native.vim) | UI native |
+| [goda-cmp-ui-pum.vim](https://github.com/Shougo/goda-cmp-ui-pum.vim) | UI pum |
+| [goda-cmp-ui-inline.vim](https://github.com/Shougo/goda-cmp-ui-inline.vim) | UI inline |
+| [goda-cmp-ext](https://github.com/Shougo/goda-cmp-ext) | source、filter、UI none |
+
+Vim script を持つ UI は、それぞれ Vim プラグインとしてインストールします。Vim script を持たない source、filter と UI none は、goda-cmp-ext という一つの Go モジュールにまとめました。こちらは Vim プラグインではないので(名前に `.vim` も付けていません)、設定の `go.mod` に書くだけで済みます。
+
+goda-cmp.vim では ddc.vim と違って、Go の拡張は import する単位で選べるので、source 毎にリポジトリを分ける必要はありません。リポジトリを増やしすぎると管理が大変になるので、大きくなりすぎたものだけを今後個別に分離する方針です。
+
+拡張は ddc.vim の拡張から移植したもので、名前は元の拡張から `_` を除いたものです(`matcher_head` は `matcherhead`)。パラメータも元の拡張のものをそのまま使えます。
 
 | 種類 | 拡張 |
 |---|---|
@@ -189,6 +202,7 @@ ddc.vim との主な違いは次のとおりです。
 - **拡張の名前:** `_` を除いた名前になります(`cmdline_history` は `cmdlinehistory`)。
 - **`context_filetype`:** `ddc#enable()` の引数ではなく、`contextFiletype` オプションで指定します。
 - **拡張の登録:** `ddc#register()` のような実行時の登録はありません。拡張は設定の `main.go` で import します。
+- **拡張のインストール:** source と filter は goda-cmp-ext の Go モジュールにまとまっていて、プラグインとしてのインストールは要りません。UI は goda-cmp-ui-pum.vim などをインストールします。
 - **`ddc#custom#set_context_*()`:** Go の `DynamicConfig` で置き換えます。
 
 ## goda-cmp.vim の使用方法
@@ -199,7 +213,7 @@ Go 1.26 以降と、Vim 9.1 以降または Neovim が必要です。
 
 - `Shougo/goda.vim`
 - `Shougo/goda-cmp.vim`
-- pum UI を使う場合は `Shougo/pum.vim`
+- 使う UI: `Shougo/goda-cmp-ui-pum.vim`(と `Shougo/pum.vim`)、`Shougo/goda-cmp-ui-native.vim`、`Shougo/goda-cmp-ui-inline.vim`
 
 次に、自分の設定モジュールを作ります。
 
@@ -208,6 +222,9 @@ mkdir -p ~/.vim/goda-cmp && cd ~/.vim/goda-cmp   # Neovim なら ~/.config/nvim/
 cp /path/to/goda-cmp.vim/examples/config/{main.go,config.go} .
 go mod init goda-cmp-config
 go get github.com/Shougo/goda-cmp.vim@latest
+go get github.com/Shougo/goda-cmp-ext@latest
+go get github.com/Shougo/goda-cmp-ui-native.vim@latest
+go get github.com/Shougo/goda-cmp-ui-pum.vim@latest
 go mod tidy
 ```
 
@@ -226,23 +243,18 @@ autocmd VimEnter * call goda_cmp#enable()
 
 挿入モードで文字を打つと、バッファ中の単語が補完されます。何も出ない場合は、`:echo goda#log()` でプラグインの出力を確認してください。
 
-拡張を更新するときは、設定モジュールで `go get -u ./...` を実行し、`goda_cmp#build()` でビルドし直します。
+拡張を更新するときは、設定モジュールで `go get -u ./...` を実行し、`goda_cmp#build()` でビルドし直します。goda-pm.vim を使っていれば、インストールされたプラグインのソースがそのままビルドに使われるので、プラグインを更新して `goda_cmp#build()` するだけで済みます。
 Go が必要になるのはビルドのときだけなので実行時には必要がありません。
 
 詳しくは `:help goda_cmp` を参照してください。
 
 ## これからについて
 
-ddc.vim の機能はほぼ揃ったので、当面は機能追加よりも仕様の確定と安定化に力を入れます。version 1.0 では、リポジトリを次の単位に分ける予定です。
-
-- 本体
-- UI(UI 毎にリポジトリ分離)
-- 拡張(source と filter をまとめて1つ)
-
-goda-cmp.vim では ddc.vim と違って、Go の拡張は import する単位で選べるので、source 毎にリポジトリを分ける必要はありません。リポジトリを増やしすぎると管理が大変になるので、大きくなりすぎたものだけを個別に分離する方針です。
+ddc.vim の機能はほぼ揃い、リポジトリの分割も終わりました。当面は機能追加よりも仕様の確定と安定化に力を入れ、version 1.0 を目指します。
 
 ## GitHub Sponsors について
 
 goda.vim, goda-cmp.vim の開発は、GitHub Sponsors の支援を受けて行っています。よろしければ支援をお願いします。
 
 https://zenn.dev/shougo/articles/github-sponsors
+
